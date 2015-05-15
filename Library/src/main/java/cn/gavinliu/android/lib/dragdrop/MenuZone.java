@@ -5,7 +5,7 @@ import android.view.View;
 /**
  * Created by gavin on 15-5-15.
  */
-public class MenuZone implements DragDropController.DragDrorpListener {
+public class MenuZone implements DragDropController.DragDropListener {
 
     public View menuView;
     public MenuType menuType;

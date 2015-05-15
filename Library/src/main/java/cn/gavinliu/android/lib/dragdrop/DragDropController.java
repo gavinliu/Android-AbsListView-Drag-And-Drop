@@ -2,7 +2,6 @@ package cn.gavinliu.android.lib.dragdrop;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,7 +18,7 @@ public class DragDropController {
 
     private Context mContext;
 
-    private boolean mIsDraging;
+    private boolean mIsDragging;
 
     private DragView mDragView;
 
@@ -40,7 +39,7 @@ public class DragDropController {
         mMenus.add(menuZone);
     }
 
-    interface DragDrorpListener {
+    interface DragDropListener {
 
         void onDragStart();
 
@@ -66,7 +65,7 @@ public class DragDropController {
         mDragView.setImageBitmap(bitmap);
         mDragView.onDragStart();
 
-        mIsDraging = true;
+        mIsDragging = true;
 
         mItemView = v;
 
@@ -86,11 +85,11 @@ public class DragDropController {
                 break;
         }
 
-        return mIsDraging;
+        return mIsDragging;
     }
 
     public boolean onTouchEvent(MotionEvent ev) {
-        if (!mIsDraging) {
+        if (!mIsDragging) {
             return false;
         }
 
@@ -134,15 +133,13 @@ public class DragDropController {
             case MotionEvent.ACTION_CANCEL:
                 if (mDragView != null) {
                     mDragView.onDragEnd();
-                    mDragView = null;
                 }
 
                 if (mMenuZone != null) {
                     mMenuZone.onDragEnd();
-                    mMenuZone = null;
                 }
 
-                mIsDraging = false;
+                mIsDragging = false;
 
                 mItemView.setVisibility(View.VISIBLE);
 

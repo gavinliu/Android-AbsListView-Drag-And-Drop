@@ -10,7 +10,7 @@ import android.widget.ImageView;
 /**
  * Created by gavin on 15-5-15.
  */
-public class DragView extends ImageView implements DragDropController.DragDrorpListener {
+public class DragView extends ImageView implements DragDropController.DragDropListener {
 
     private int createX;
     private int createY;
