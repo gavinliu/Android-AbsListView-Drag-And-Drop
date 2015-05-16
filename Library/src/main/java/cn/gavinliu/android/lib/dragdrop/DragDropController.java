@@ -26,7 +26,8 @@ public class DragDropController {
 
     private List<MenuZone> mMenus;
 
-    private View mItemView;
+    private float mMotionDownX;
+    private float mMotionDownY;
 
     public DragDropController(Context ctx) {
         mContext = ctx;
@@ -55,26 +56,18 @@ public class DragDropController {
 
     public void startDrag(View v) {
 
-        int[] position = new int[2];
-        v.getLocationOnScreen(position);
-        int x = position[0];
-        int y = position[1];
-
         Bitmap bitmap = getViewBitmap(v);
-        mDragView = new DragView(mContext, x, y, v.getWidth(), v.getHeight());
+
+        if (bitmap == null) {
+            return;
+        }
+
+        mDragView = new DragView(mContext, v);
         mDragView.setImageBitmap(bitmap);
         mDragView.onDragStart();
 
         mIsDragging = true;
-
-        mItemView = v;
-
-        mItemView.setVisibility(View.INVISIBLE);
     }
-
-    private float mMotionDownX;
-    private float mMotionDownY;
-
 
     public boolean onInterceptTouchEvent(MotionEvent ev) {
 
@@ -107,9 +100,6 @@ public class DragDropController {
                 if (mDragView != null) {
                     mDragView.move(moveX, moveY);
                 }
-                Log.d(TAG, "mMotionDownX:" + mMotionDownX);
-
-                Log.d(TAG, "moveX:" + moveX);
 
                 if (mMenus != null) {
                     for (MenuZone zone : mMenus) {
@@ -132,16 +122,20 @@ public class DragDropController {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 if (mDragView != null) {
-                    mDragView.onDragEnd();
+                    if (mMenuZone != null) {
+                        mDragView.onDrop();
+                        mMenuZone.onDrop();
+                    } else {
+                        mDragView.onDragEnd();
+                    }
                 }
 
                 if (mMenuZone != null) {
                     mMenuZone.onDragEnd();
+                    mMenuZone = null;
                 }
 
                 mIsDragging = false;
-
-                mItemView.setVisibility(View.VISIBLE);
 
                 break;
         }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DragAndDropListView</string>
+    <string name="app_name">DDListView</string>
 
     <string name="action_delete">Delete</string>
 </resources>
