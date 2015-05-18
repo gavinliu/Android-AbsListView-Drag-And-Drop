@@ -54,7 +54,7 @@ public class DragDropController {
 
     }
 
-    public void startDrag(View v) {
+    void startDrag(View v) {
 
         Bitmap bitmap = getViewBitmap(v);
 
@@ -69,7 +69,7 @@ public class DragDropController {
         mIsDragging = true;
     }
 
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
+    boolean onInterceptTouchEvent(MotionEvent ev) {
 
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -81,7 +81,7 @@ public class DragDropController {
         return mIsDragging;
     }
 
-    public boolean onTouchEvent(MotionEvent ev) {
+    boolean onTouchEvent(MotionEvent ev) {
         if (!mIsDragging) {
             return false;
         }
@@ -99,6 +99,7 @@ public class DragDropController {
 
                 if (mDragView != null) {
                     mDragView.move(moveX, moveY);
+                    mDragView.setTouchPosition((int) ev.getRawX(), (int) ev.getRawY());
                 }
 
                 if (mMenus != null) {
