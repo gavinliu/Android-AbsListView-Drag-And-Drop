@@ -37,6 +37,25 @@ public class DDListView extends ListView implements AdapterView.OnItemLongClickL
         setOnItemLongClickListener(this);
     }
 
+    public interface onDragDropListener {
+
+        /**
+         * @param position ListView item position
+         */
+        void onDragStart(int position);
+
+        void onDragEnter();
+
+        void onDragExit();
+
+        void onDragEnd();
+
+        /**
+         * @param id Menu View id
+         */
+        void onDrop(int id);
+    }
+
     public void addMenu(View v, MenuType menuType) {
         int[] position = new int[2];
         v.getLocationOnScreen(position);
@@ -48,10 +67,7 @@ public class DDListView extends ListView implements AdapterView.OnItemLongClickL
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(getContext(), "onItemLongClick", Toast.LENGTH_SHORT).show();
-
         mDDController.startDrag(view);
-
         return true;
     }
 

@@ -9,11 +9,11 @@ import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 /**
@@ -24,13 +24,15 @@ public class DragView extends ImageView implements DragDropController.DragDropLi
     private int mTouchX, mTouchY;
     private int mCreateX, mCreateY;
 
-    private int layoutX, layoutY;
     private int layoutWidth, layoutHeight;
 
     private WindowManager mWindowManager;
     private WindowManager.LayoutParams mLayoutParams;
 
     private View mTargetView;
+
+    // use a full screen layout for better DragView animator
+    private FrameLayout layout;
 
     @Deprecated
     public DragView(Context context) {
@@ -80,10 +82,8 @@ public class DragView extends ImageView implements DragDropController.DragDropLi
 
     @Override
     public void onDragEnd() {
-        ObjectAnimator animatorX = ObjectAnimator.ofInt(this, "layoutX", layoutX, mCreateX);
-        ObjectAnimator animatorY = ObjectAnimator.ofInt(this, "layoutY", layoutY, mCreateY);
-        animatorX.addUpdateListener(updateListener);
-        animatorY.addUpdateListener(updateListener);
+        ObjectAnimator animatorX = ObjectAnimator.ofFloat(this, "x", getX(), mCreateX);
+        ObjectAnimator animatorY = ObjectAnimator.ofFloat(this, "y", getY(), mCreateY);
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.setDuration(550);
@@ -115,25 +115,12 @@ public class DragView extends ImageView implements DragDropController.DragDropLi
         });
     }
 
-    ValueAnimator.AnimatorUpdateListener updateListener = new ValueAnimator.AnimatorUpdateListener() {
-
-        @Override
-        public void onAnimationUpdate(ValueAnimator animation) {
-            move();
-        }
-    };
-
     @Override
     public void onDrop() {
-        ObjectAnimator animatorX = ObjectAnimator.ofInt(this, "layoutX", layoutX, mTouchX - layoutWidth / 2);
-        ObjectAnimator animatorY = ObjectAnimator.ofInt(this, "layoutY", layoutY, mTouchY - layoutHeight / 2);
+        ObjectAnimator animatorX = ObjectAnimator.ofFloat(this, "x", getX(), mTouchX - layoutWidth / 2);
+        ObjectAnimator animatorY = ObjectAnimator.ofFloat(this, "y", getY(), mTouchY - layoutHeight / 2);
         ObjectAnimator animatorWidth = ObjectAnimator.ofFloat(this, "scaleX", 1f, 0f);
         ObjectAnimator animatorHeight = ObjectAnimator.ofFloat(this, "scaleY", 1f, 0f);
-
-        animatorX.addUpdateListener(updateListener);
-        animatorY.addUpdateListener(updateListener);
-//        animatorWidth.addUpdateListener(updateListener);
-//        animatorHeight.addUpdateListener(updateListener);
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.setDuration(450);
@@ -165,6 +152,7 @@ public class DragView extends ImageView implements DragDropController.DragDropLi
         });
     }
 
+
     private void show() {
         mLayoutParams = new WindowManager.LayoutParams();
         mLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_SUB_PANEL;
@@ -174,38 +162,32 @@ public class DragView extends ImageView implements DragDropController.DragDropLi
         mLayoutParams.flags = mLayoutParams.flags | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
         mLayoutParams.gravity = Gravity.START | Gravity.TOP;
 
-        mLayoutParams.x = mCreateX;
-        mLayoutParams.y = mCreateY;
+        mLayoutParams.x = 0;
+        mLayoutParams.y = 0;
 
-        mLayoutParams.width = layoutWidth;
-        mLayoutParams.height = layoutHeight;
+        mLayoutParams.width = 1080;
+        mLayoutParams.height = 1920;
+        layout = new FrameLayout(getContext());
+        mWindowManager.addView(layout, mLayoutParams);
 
-        mWindowManager.addView(this, mLayoutParams);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(layoutWidth, layoutHeight);
+        setX(mCreateX);
+        setY(mCreateY);
+        layout.addView(this, params);
+
         mTargetView.setVisibility(INVISIBLE);
     }
 
-    public void move(int x, int y) {
-        layoutX = mCreateX - x;
-        layoutY = mCreateY - y;
-
-        move();
-    }
-
-    private void move() {
-        mLayoutParams.x = layoutX;
-        mLayoutParams.y = layoutY;
-        mLayoutParams.width = layoutWidth;
-        mLayoutParams.height = layoutHeight;
-
-        Log.d("move", "width:" + layoutWidth);
-        Log.d("move", "height:" + layoutHeight);
-
-        mWindowManager.updateViewLayout(this, mLayoutParams);
+    public void move(int offsetX, int offsetY) {
+        setX(mCreateX - offsetX);
+        setY(mCreateY - offsetY);
     }
 
     private void remove() {
         this.setVisibility(View.GONE);
-        mWindowManager.removeView(this);
+        layout.setVisibility(View.GONE);
+        mWindowManager.removeView(layout);
+
         recycleBitmap();
 
         mTargetView.setVisibility(VISIBLE);
@@ -225,14 +207,6 @@ public class DragView extends ImageView implements DragDropController.DragDropLi
                 bitmap.recycle();
             }
         }
-    }
-
-    public void setLayoutX(int layoutX) {
-        this.layoutX = layoutX;
-    }
-
-    public void setLayoutY(int layoutY) {
-        this.layoutY = layoutY;
     }
 
 }
