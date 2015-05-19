@@ -4,7 +4,7 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/x"
+        android:id="@+id/action_delete"
         android:title="@string/action_delete"
         app:showAsAction="always" />
 

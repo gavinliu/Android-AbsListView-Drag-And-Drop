@@ -29,6 +29,8 @@ public class DragDropController {
     private float mMotionDownX;
     private float mMotionDownY;
 
+    protected DragDropListener dragDropListener;
+
     public DragDropController(Context ctx) {
         mContext = ctx;
     }
@@ -50,8 +52,7 @@ public class DragDropController {
 
         void onDragEnd();
 
-        void onDrop();
-
+        void onDrop(int id);
     }
 
     void startDrag(View v) {
@@ -124,8 +125,9 @@ public class DragDropController {
             case MotionEvent.ACTION_CANCEL:
                 if (mDragView != null) {
                     if (mMenuZone != null) {
-                        mDragView.onDrop();
-                        mMenuZone.onDrop();
+                        mMenuZone.onDrop(mMenuZone.getId());
+                        mDragView.onDrop(mMenuZone.getId());
+                        dragDropListener.onDrop(mMenuZone.getId());
                     } else {
                         mDragView.onDragEnd();
                     }
@@ -173,4 +175,7 @@ public class DragDropController {
         return bitmap;
     }
 
+    public void setDragDropListener(DragDropListener dragDropListener) {
+        this.dragDropListener = dragDropListener;
+    }
 }

@@ -20,6 +20,10 @@ public class MenuZone implements DragDropController.DragDropListener {
         this.h = h;
     }
 
+    public int getId() {
+        return menuView.getId();
+    }
+
     @Override
     public String toString() {
         return "x:" + x + "," + "y:" + y + "," + "w:" + w + ",h:" + h;
@@ -50,7 +54,7 @@ public class MenuZone implements DragDropController.DragDropListener {
     }
 
     @Override
-    public void onDrop() {
+    public void onDrop(int id) {
 
     }
 }

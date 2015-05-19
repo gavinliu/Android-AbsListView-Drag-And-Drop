@@ -13,9 +13,10 @@ import android.widget.Toast;
 /**
  * Created by gavin on 15-5-13.
  */
-public class DDListView extends ListView implements AdapterView.OnItemLongClickListener {
+public class DDListView extends ListView implements AdapterView.OnItemLongClickListener, DragDropController.DragDropListener {
 
     public DragDropController mDDController;
+    protected OnDragDropListener onDragDropListener;
 
     public DDListView(Context context) {
         super(context);
@@ -34,21 +35,24 @@ public class DDListView extends ListView implements AdapterView.OnItemLongClickL
 
     private void init() {
         mDDController = new DragDropController(getContext());
+        mDDController.setDragDropListener(this);
         setOnItemLongClickListener(this);
     }
 
-    public interface onDragDropListener {
+    public interface OnDragDropListener {
 
-        /**
-         * @param position ListView item position
-         */
-        void onDragStart(int position);
+        void onDragStart();
 
         void onDragEnter();
 
         void onDragExit();
 
         void onDragEnd();
+
+        /**
+         * @param id The id is ListView item id
+         */
+        void onSelect(long id);
 
         /**
          * @param id Menu View id
@@ -68,6 +72,11 @@ public class DDListView extends ListView implements AdapterView.OnItemLongClickL
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         mDDController.startDrag(view);
+
+        if (onDragDropListener != null) {
+            onDragDropListener.onSelect(id);
+        }
+
         return true;
     }
 
@@ -99,5 +108,42 @@ public class DDListView extends ListView implements AdapterView.OnItemLongClickL
         return super.onTouchEvent(ev);
     }
 
+    // ============
+    // >> DragDropController.DragDropListener
+    // ============
 
+    @Override
+    public void onDragStart() {
+
+    }
+
+    @Override
+    public void onDragEnter() {
+
+    }
+
+    @Override
+    public void onDragExit() {
+
+    }
+
+    @Override
+    public void onDragEnd() {
+
+    }
+
+    @Override
+    public void onDrop(int id) {
+        if (onDragDropListener != null) {
+            onDragDropListener.onDrop(id);
+        }
+    }
+
+    // ============
+    // << DragDropController.DragDropListener
+    // ============
+
+    public void setOnDragDropListener(OnDragDropListener onDragDropListener) {
+        this.onDragDropListener = onDragDropListener;
+    }
 }
