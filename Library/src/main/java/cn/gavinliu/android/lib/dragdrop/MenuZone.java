@@ -11,13 +11,16 @@ public class MenuZone implements DragDropController.DragDropListener {
     public MenuType menuType;
     public int x, y, w, h;
 
-    public MenuZone(View menuView, MenuType menuType, int x, int y, int w, int h) {
+    public MenuZone(View menuView, MenuType menuType) {
         this.menuView = menuView;
         this.menuType = menuType;
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
+
+        int[] position = new int[2];
+        menuView.getLocationOnScreen(position);
+        this.x = position[0];
+        this.y = position[1];
+        this.w = menuView.getWidth();
+        this.h = menuView.getHeight();
     }
 
     public int getId() {

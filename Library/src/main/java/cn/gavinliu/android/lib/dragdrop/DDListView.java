@@ -61,11 +61,7 @@ public class DDListView extends ListView implements AdapterView.OnItemLongClickL
     }
 
     public void addMenu(View v, MenuType menuType) {
-        int[] position = new int[2];
-        v.getLocationOnScreen(position);
-        int x = position[0];
-        int y = position[1];
-        MenuZone menuZone = new MenuZone(v, menuType, x, y, v.getWidth(), v.getHeight());
+        MenuZone menuZone = new MenuZone(v, menuType);
         mDDController.addMenuZone(menuZone);
     }
 
@@ -101,7 +97,6 @@ public class DDListView extends ListView implements AdapterView.OnItemLongClickL
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        Log.d("DDListView", ev.getRawX() + "," + ev.getRawY());
 
         mDDController.onTouchEvent(ev);
 
