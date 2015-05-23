@@ -23,12 +23,12 @@ public class DDListView extends ListView implements
         AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, AbsListView.OnScrollListener {
 
     private DragDropController mDDController;
-
     protected OnDragDropListener onDragDropListener;
-
     private ActionMode mActionMode;
-
     private SelectionMode mSelectionMode;
+    private CheckLongClick mCheckLongClick;
+    private static final int TOUCH_SLOP = 20;
+    private int mLastMotionX, mLastMotionY;
 
     public enum SelectionMode {
         Custom, Official
@@ -126,15 +126,6 @@ public class DDListView extends ListView implements
 
         return super.onInterceptTouchEvent(ev);
     }
-
-    CheckLongClick mCheckLongClick;
-
-    private static final int TOUCH_SLOP = 20;
-
-    private int mLastMotionX, mLastMotionY;
-
-    // 是否移动了
-    private boolean isMoved;
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
@@ -271,15 +262,12 @@ public class DDListView extends ListView implements
 
         @Override
         public void run() {
-            Toast.makeText(getContext(), "CheckLongClick", Toast.LENGTH_LONG).show();
-
             int position = pointToPosition(mLastMotionX, mLastMotionY);
             long id = getAdapter().getItemId(position);
             int itemNum = position - getFirstVisiblePosition();
             View selectedView = getChildAt(itemNum);
 
             setItemChecked(position, true);
-
             onItemLongClick(DDListView.this, selectedView, position, id);
         }
     }
