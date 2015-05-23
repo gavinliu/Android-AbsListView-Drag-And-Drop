@@ -3,10 +3,14 @@ package cn.gavinliu.draganddroplistview;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
+import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.CheckedTextView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -29,22 +33,6 @@ public class MainActivity extends ActionBarActivity {
 
         list = new ArrayList<String>(Arrays.asList(Cheeses.sCheeseStrings));
         setupListView();
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                View delete = findViewById(R.id.action_delete);
-                if (delete != null) {
-                    listView.addMenu(delete, MenuType.DELETE);
-                }
-            }
-        });
-        return true;
     }
 
     private void setupListView() {
@@ -86,8 +74,47 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         });
-    }
+        listView.setChoiceMode(DDListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
 
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                getMenuInflater().inflate(R.menu.menu_main, menu);
+                mode.setTitle("Select Item");
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                new Handler().post(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        View delete = findViewById(R.id.action_delete);
+                        if (delete != null) {
+                            listView.addMenu(delete, MenuType.DELETE);
+                        }
+                    }
+                });
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+
+            }
+
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+
+            }
+        });
+    }
 
     BaseAdapter adapter = new BaseAdapter() {
 
@@ -109,15 +136,19 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.item, null);
+                convertView = getLayoutInflater().inflate(android.R.layout.simple_list_item_checked, null);
             }
 
-            TextView textView = (TextView) convertView.findViewById(R.id.text);
-            textView.setText(list.get(position));
+//            TextView textView = (TextView) convertView.findViewById(R.id.text);
+//            textView.setText(list.get(position));
+
+            CheckedTextView tx = (CheckedTextView) convertView;
+            tx.setText(list.get(position));
 
             return convertView;
         }
 
     };
+
 
 }
