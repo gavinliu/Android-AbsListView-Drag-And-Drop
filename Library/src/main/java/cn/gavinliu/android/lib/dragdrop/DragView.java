@@ -36,14 +36,19 @@ public class DragView extends ImageView implements DragDropController.DragDropLi
     // use a full screen layout for better DragView animator
     private FrameLayout layout;
 
+    public long itemId;
+    public int itemPosition;
+
     @Deprecated
     public DragView(Context context) {
         super(context);
     }
 
-    public DragView(Context context, View targetView) {
+    public DragView(Context context, View targetView, int itemPosition, long itemId) {
         super(context);
-        mTargetView = targetView;
+        this.mTargetView = targetView;
+        this.itemId = itemId;
+        this.itemPosition = itemPosition;
         init();
     }
 
@@ -96,7 +101,7 @@ public class DragView extends ImageView implements DragDropController.DragDropLi
     }
 
     @Override
-    public void onDrop(int id) {
+    public void onDrop(int menuId, int itemPosition, long itemId) {
         ObjectAnimator animatorX = ObjectAnimator.ofFloat(this, "x", getX(), mTouchX - layoutWidth / 2);
         ObjectAnimator animatorY = ObjectAnimator.ofFloat(this, "y", getY(), mTouchY - layoutHeight / 2);
         ObjectAnimator animatorWidth = ObjectAnimator.ofFloat(this, "scaleX", 1f, 0f);

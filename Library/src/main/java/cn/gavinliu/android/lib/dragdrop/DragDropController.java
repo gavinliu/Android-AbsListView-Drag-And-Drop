@@ -52,10 +52,10 @@ public class DragDropController {
 
         void onDragEnd();
 
-        void onDrop(int id);
+        void onDrop(int menuId, int itemPosition, long itemId);
     }
 
-    void startDrag(View v) {
+    void startDrag(View v, int itemPosition, long itemId) {
 
         Bitmap bitmap = getViewBitmap(v);
 
@@ -63,7 +63,7 @@ public class DragDropController {
             return;
         }
 
-        mDragView = new DragView(mContext, v);
+        mDragView = new DragView(mContext, v, itemPosition, itemId);
         mDragView.setImageBitmap(bitmap);
         mDragView.onDragStart();
 
@@ -125,9 +125,9 @@ public class DragDropController {
             case MotionEvent.ACTION_CANCEL:
                 if (mDragView != null) {
                     if (mMenuZone != null) {
-                        mMenuZone.onDrop(mMenuZone.getId());
-                        mDragView.onDrop(mMenuZone.getId());
-                        dragDropListener.onDrop(mMenuZone.getId());
+                        mMenuZone.onDrop(mMenuZone.getId(), mDragView.itemPosition, mDragView.itemId);
+                        mDragView.onDrop(mMenuZone.getId(), mDragView.itemPosition, mDragView.itemId);
+                        dragDropListener.onDrop(mMenuZone.getId(), mDragView.itemPosition, mDragView.itemId);
                     } else {
                         mDragView.onDragEnd();
                     }

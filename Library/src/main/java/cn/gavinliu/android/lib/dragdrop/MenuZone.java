@@ -57,7 +57,7 @@ public class MenuZone implements DragDropController.DragDropListener {
     }
 
     @Override
-    public void onDrop(int id) {
+    public void onDrop(int menuId, int itemPosition, long itemId) {
 
     }
 }

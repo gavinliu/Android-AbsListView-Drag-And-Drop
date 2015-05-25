@@ -2,6 +2,7 @@ package cn.gavinliu.android.lib.dragdrop;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ActionMode;
@@ -12,8 +13,12 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Created by gavin on 15-5-13.
@@ -29,10 +34,6 @@ public class DDListView extends ListView implements
     private CheckLongClick mCheckLongClick;
     private static final int TOUCH_SLOP = 20;
     private int mLastMotionX, mLastMotionY;
-
-    public enum SelectionMode {
-        Custom, Official
-    }
 
     public DDListView(Context context) {
         super(context);
@@ -66,15 +67,7 @@ public class DDListView extends ListView implements
 
         void onDragEnd();
 
-        /**
-         * @param id The id is ListView item id
-         */
-        void onSelect(long id);
-
-        /**
-         * @param id Menu View id
-         */
-        void onDrop(int id);
+        void onDrop(int menuId, int itemPosition, long itemId);
     }
 
     public void addMenu(View v, MenuType menuType) {
@@ -89,10 +82,14 @@ public class DDListView extends ListView implements
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        mDDController.startDrag(view);
 
-        if (onDragDropListener != null) {
-            onDragDropListener.onSelect(id);
+        mDDController.startDrag(view, position, id);
+
+        switch (mSelectionMode) {
+            case Custom:
+                setChoiceMode(DDListView.CHOICE_MODE_MULTIPLE);
+                setItemChecked(position, true);
+                break;
         }
 
         return true;
@@ -138,22 +135,21 @@ public class DDListView extends ListView implements
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
 
-                final int longPressTimeout = ViewConfiguration.getLongPressTimeout();
-
-                if (mCheckLongClick == null) {
-                    mCheckLongClick = new CheckLongClick();
-                }
-
                 mLastMotionX = x;
                 mLastMotionY = y;
 
-                if (mActionMode != null)
+                if (mActionMode != null) {
+                    if (mCheckLongClick == null) {
+                        mCheckLongClick = new CheckLongClick();
+                    }
+                    int longPressTimeout = ViewConfiguration.getLongPressTimeout();
                     postDelayed(mCheckLongClick, longPressTimeout);
+                }
 
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                if (Math.abs(mLastMotionX - x) > TOUCH_SLOP || Math.abs(mLastMotionY - y) > TOUCH_SLOP) {
+                if (mCheckLongClick != null && (Math.abs(mLastMotionX - x) > TOUCH_SLOP || Math.abs(mLastMotionY - y) > TOUCH_SLOP)) {
                     removeCallbacks(mCheckLongClick);
                 }
 
@@ -161,7 +157,9 @@ public class DDListView extends ListView implements
 
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                removeCallbacks(mCheckLongClick);
+                if (mCheckLongClick != null) {
+                    removeCallbacks(mCheckLongClick);
+                }
                 break;
         }
 
@@ -189,18 +187,33 @@ public class DDListView extends ListView implements
     }
 
     @Override
-    public void onDrop(int id) {
-        if (onDragDropListener != null) {
-            onDragDropListener.onDrop(id);
-        }
-
-        clearChoices();
+    public void onDrop(int menuId, int itemPosition, long itemId) {
         exitMultiChoiceMode();
+
+        if (onDragDropListener != null) {
+            onDragDropListener.onDrop(menuId, itemPosition, itemId);
+        }
     }
 
     public void exitMultiChoiceMode() {
-        if (mActionMode != null) {
-            mActionMode.finish();
+        clearChoices();
+
+        switch (mSelectionMode) {
+            case Custom:
+                // TODO bad code,
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        setChoiceMode(DDListView.CHOICE_MODE_NONE);
+                    }
+                }, 100);
+                break;
+
+            case Official:
+                if (mActionMode != null) {
+                    mActionMode.finish();
+                }
+                break;
         }
     }
 
@@ -244,7 +257,7 @@ public class DDListView extends ListView implements
             if (isDraggable) {
                 int item = position - getFirstVisiblePosition();
                 View v = getChildAt(item);
-                mDDController.startDrag(v);
+                mDDController.startDrag(v, position, id);
                 isDraggable = false;
             }
         }
@@ -256,6 +269,12 @@ public class DDListView extends ListView implements
 
     public void setSelectionMode(SelectionMode selectionMode) {
         this.mSelectionMode = selectionMode;
+
+        switch (selectionMode) {
+            case Official:
+                setChoiceMode(CHOICE_MODE_MULTIPLE_MODAL);
+                break;
+        }
     }
 
     private class CheckLongClick implements Runnable {
