@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ActionMode;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -34,6 +35,8 @@ public class DDListView extends ListView implements
     private CheckLongClick mCheckLongClick;
     private static final int TOUCH_SLOP = 20;
     private int mLastMotionX, mLastMotionY;
+
+    private boolean isMultChoise;
 
     public DDListView(Context context) {
         super(context);
@@ -87,6 +90,7 @@ public class DDListView extends ListView implements
 
         switch (mSelectionMode) {
             case Custom:
+                isMultChoise = true;
                 setChoiceMode(DDListView.CHOICE_MODE_MULTIPLE);
                 setItemChecked(position, true);
                 break;
@@ -197,10 +201,11 @@ public class DDListView extends ListView implements
 
     public void exitMultiChoiceMode() {
         clearChoices();
-
+        isMultChoise = false;
         switch (mSelectionMode) {
             case Custom:
                 // TODO bad code,
+                ((BaseAdapter)getAdapter()).notifyDataSetChanged();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -275,6 +280,15 @@ public class DDListView extends ListView implements
                 setChoiceMode(CHOICE_MODE_MULTIPLE_MODAL);
                 break;
         }
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && isMultChoise) {
+            exitMultiChoiceMode();
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
     }
 
     private class CheckLongClick implements Runnable {
