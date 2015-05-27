@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import cn.gavinliu.android.lib.dragdrop.listener.OnDragDropListener;
 import cn.gavinliu.android.lib.dragdrop.widget.DragOrDroppable;
 import cn.gavinliu.android.lib.dragdrop.widget.MenuZone;
 
@@ -25,11 +26,12 @@ public class DDListView extends ListView implements DragOrDroppable,
         AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, AbsListView.OnScrollListener {
 
     private DragDropController mDDController;
-    protected OnDragDropListener onDragDropListener;
+    private DragDropAttacher mDragDropAttacher;
+    private OnDragDropListener onDragDropListener;
     private ActionMode mActionMode;
     private SelectionMode mSelectionMode;
     private CheckLongClick mCheckLongClick;
-    private static final int TOUCH_SLOP = 20;
+    private static final int TOUCH_SLOP = 10;
     private int mLastMotionX, mLastMotionY;
 
     private boolean isMultChoise;
@@ -56,19 +58,6 @@ public class DDListView extends ListView implements DragOrDroppable,
         setOnScrollListener(this);
     }
 
-    public interface OnDragDropListener {
-
-        void onDragStart();
-
-        void onDragEnter();
-
-        void onDragExit();
-
-        void onDragEnd();
-
-        void onDrop(int menuId, int itemPosition, long itemId);
-    }
-
     public void addMenuZone(View v, MenuZone.Type menuType) {
         MenuZone menuZone = new MenuZone(v, menuType);
         mDDController.addMenuZone(menuZone);
@@ -89,6 +78,8 @@ public class DDListView extends ListView implements DragOrDroppable,
                 isMultChoise = true;
                 setChoiceMode(DDListView.CHOICE_MODE_MULTIPLE);
                 setItemChecked(position, true);
+
+                mDragDropAttacher.startDrag();
                 break;
         }
 
@@ -167,23 +158,40 @@ public class DDListView extends ListView implements DragOrDroppable,
     }
 
     @Override
-    public void dragStart() {
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && isMultChoise) {
+            exitMultiChoiceMode();
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
 
+    @Override
+    public void dragStart() {
+        if (onDragDropListener != null) {
+            onDragDropListener.onDragStart();
+        }
     }
 
     @Override
     public void dragEnter() {
-
+        if (onDragDropListener != null) {
+            onDragDropListener.onDragEnter();
+        }
     }
 
     @Override
     public void dragExit() {
-
+        if (onDragDropListener != null) {
+            onDragDropListener.onDragExit();
+        }
     }
 
     @Override
     public void dragEnd() {
-
+        if (onDragDropListener != null) {
+            onDragDropListener.onDragEnd();
+        }
     }
 
     @Override
@@ -264,29 +272,6 @@ public class DDListView extends ListView implements DragOrDroppable,
         }
     }
 
-    public void setOnDragDropListener(OnDragDropListener onDragDropListener) {
-        this.onDragDropListener = onDragDropListener;
-    }
-
-    public void setSelectionMode(SelectionMode selectionMode) {
-        this.mSelectionMode = selectionMode;
-
-        switch (selectionMode) {
-            case Official:
-                setChoiceMode(CHOICE_MODE_MULTIPLE_MODAL);
-                break;
-        }
-    }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && isMultChoise) {
-            exitMultiChoiceMode();
-            return true;
-        }
-        return super.onKeyUp(keyCode, event);
-    }
-
     private class CheckLongClick implements Runnable {
 
         @Override
@@ -300,4 +285,23 @@ public class DDListView extends ListView implements DragOrDroppable,
             onItemLongClick(DDListView.this, selectedView, position, id);
         }
     }
+
+    public void setOnDragDropListener(OnDragDropListener onDragDropListener) {
+        this.onDragDropListener = onDragDropListener;
+    }
+
+    public void setDragDropAttacher(DragDropAttacher dragDropAttacher) {
+        this.mDragDropAttacher = dragDropAttacher;
+    }
+
+    public void setSelectionMode(SelectionMode selectionMode) {
+        this.mSelectionMode = selectionMode;
+
+        switch (selectionMode) {
+            case Official:
+                setChoiceMode(CHOICE_MODE_MULTIPLE_MODAL);
+                break;
+        }
+    }
+
 }

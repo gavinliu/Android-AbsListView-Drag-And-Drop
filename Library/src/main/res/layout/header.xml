@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#03A9F4"
+    android:orientation="horizontal">
+
+    <Button
+        android:id="@id/btn_cancel"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:text="取消" />
+
+    <TextView
+        android:id="@id/txt_info"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="6"
+        android:gravity="center"
+        android:text="选中XX个"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@id/btn_all"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:text="全选" />
+
+</LinearLayout>

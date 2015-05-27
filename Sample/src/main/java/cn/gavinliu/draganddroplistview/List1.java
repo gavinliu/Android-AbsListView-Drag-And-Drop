@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import cn.gavinliu.android.lib.dragdrop.DDListView;
+import cn.gavinliu.android.lib.dragdrop.listener.OnDragDropListener;
 import cn.gavinliu.android.lib.dragdrop.widget.MenuZone;
 import cn.gavinliu.android.lib.dragdrop.SelectionMode;
 
@@ -85,7 +86,7 @@ public class List1 extends ActionBarActivity {
         }
     };
 
-    private DDListView.OnDragDropListener onDragDropListener = new DDListView.OnDragDropListener() {
+    private OnDragDropListener onDragDropListener = new OnDragDropListener() {
 
         @Override
         public void onDragStart() {
