@@ -9,8 +9,12 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.gavinliu.android.lib.dragdrop.widget.DragOrDroppable;
+import cn.gavinliu.android.lib.dragdrop.widget.DragView;
+import cn.gavinliu.android.lib.dragdrop.widget.MenuZone;
+
 /**
- * Created by gavin on 15-5-15.
+ * Created by GavinLiu on 2015-5-15.
  */
 public class DragDropController {
 
@@ -24,12 +28,11 @@ public class DragDropController {
 
     private MenuZone mMenuZone;
 
+    private DragOrDroppable mDragOrDroppable;
+
     private List<MenuZone> mMenus;
 
-    private float mMotionDownX;
-    private float mMotionDownY;
-
-    protected DragDropListener dragDropListener;
+    private float mMotionDownX, mMotionDownY;
 
     public DragDropController(Context ctx) {
         mContext = ctx;
@@ -42,19 +45,6 @@ public class DragDropController {
         mMenus.add(menuZone);
     }
 
-    interface DragDropListener {
-
-        void onDragStart();
-
-        void onDragEnter();
-
-        void onDragExit();
-
-        void onDragEnd();
-
-        void onDrop(int menuId, int itemPosition, long itemId);
-    }
-
     void startDrag(View v, int itemPosition, long itemId) {
 
         Bitmap bitmap = getViewBitmap(v);
@@ -65,7 +55,7 @@ public class DragDropController {
 
         mDragView = new DragView(mContext, v, itemPosition, itemId);
         mDragView.setImageBitmap(bitmap);
-        mDragView.onDragStart();
+        mDragView.dragStart();
 
         mIsDragging = true;
     }
@@ -106,13 +96,13 @@ public class DragDropController {
                 if (mMenus != null) {
                     for (MenuZone zone : mMenus) {
                         if (zone.isContains(ev.getRawX(), ev.getRawY())) {
-                            zone.onDragEnter();
-                            mDragView.onDragEnter();
+                            zone.dragEnter();
+                            mDragView.dragEnter();
 
                             mMenuZone = zone;
                         } else {
-                            zone.onDragExit();
-                            mDragView.onDragExit();
+                            zone.dragExit();
+                            mDragView.dragExit();
 
                             mMenuZone = null;
                         }
@@ -125,16 +115,16 @@ public class DragDropController {
             case MotionEvent.ACTION_CANCEL:
                 if (mDragView != null) {
                     if (mMenuZone != null) {
-                        mMenuZone.onDrop(mMenuZone.getId(), mDragView.itemPosition, mDragView.itemId);
-                        mDragView.onDrop(mMenuZone.getId(), mDragView.itemPosition, mDragView.itemId);
-                        dragDropListener.onDrop(mMenuZone.getId(), mDragView.itemPosition, mDragView.itemId);
+                        mMenuZone.drop(mMenuZone.getId(), mDragView.itemPosition, mDragView.itemId);
+                        mDragView.drop(mMenuZone.getId(), mDragView.itemPosition, mDragView.itemId);
+                        mDragOrDroppable.drop(mMenuZone.getId(), mDragView.itemPosition, mDragView.itemId);
                     } else {
-                        mDragView.onDragEnd();
+                        mDragView.dragEnd();
                     }
                 }
 
                 if (mMenuZone != null) {
-                    mMenuZone.onDragEnd();
+                    mMenuZone.dragEnd();
                     mMenuZone = null;
                 }
 
@@ -175,7 +165,7 @@ public class DragDropController {
         return bitmap;
     }
 
-    public void setDragDropListener(DragDropListener dragDropListener) {
-        this.dragDropListener = dragDropListener;
+    public void setDragOrDroppable(DragOrDroppable dragOrDroppable) {
+        this.mDragOrDroppable = dragOrDroppable;
     }
 }

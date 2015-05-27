@@ -1,16 +1,14 @@
-package cn.gavinliu.android.lib.dragdrop;
+package cn.gavinliu.android.lib.dragdrop.widget;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -19,9 +17,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 /**
- * Created by gavin on 15-5-15.
+ * Created by GavinLiu on 2015-5-15.
  */
-public class DragView extends ImageView implements DragDropController.DragDropListener {
+public class DragView extends ImageView implements DragOrDroppable {
 
     private int mTouchX, mTouchY;
     private int mCreateX, mCreateY;
@@ -72,23 +70,23 @@ public class DragView extends ImageView implements DragDropController.DragDropLi
     }
 
     @Override
-    public void onDragStart() {
+    public void dragStart() {
         show();
         setBackgroundColor(0xDCFFFFFF);
     }
 
     @Override
-    public void onDragEnter() {
+    public void dragEnter() {
         setBackgroundColor(0xDCF8BBD0);
     }
 
     @Override
-    public void onDragExit() {
+    public void dragExit() {
         setBackgroundColor(0xDCFFFFFF);
     }
 
     @Override
-    public void onDragEnd() {
+    public void dragEnd() {
         ObjectAnimator animatorX = ObjectAnimator.ofFloat(this, "x", getX(), mCreateX);
         ObjectAnimator animatorY = ObjectAnimator.ofFloat(this, "y", getY(), mCreateY);
 
@@ -101,7 +99,7 @@ public class DragView extends ImageView implements DragDropController.DragDropLi
     }
 
     @Override
-    public void onDrop(int menuId, int itemPosition, long itemId) {
+    public void drop(int menuId, int itemPosition, long itemId) {
         ObjectAnimator animatorX = ObjectAnimator.ofFloat(this, "x", getX(), mTouchX - layoutWidth / 2);
         ObjectAnimator animatorY = ObjectAnimator.ofFloat(this, "y", getY(), mTouchY - layoutHeight / 2);
         ObjectAnimator animatorWidth = ObjectAnimator.ofFloat(this, "scaleX", 1f, 0f);

@@ -17,11 +17,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import cn.gavinliu.android.lib.dragdrop.DDListView;
-import cn.gavinliu.android.lib.dragdrop.MenuType;
+import cn.gavinliu.android.lib.dragdrop.widget.MenuZone;
 import cn.gavinliu.android.lib.dragdrop.SelectionMode;
 
 /**
- * Created by gavin.liu on 2015.05.25
+ * Created by GavinLiu on 2015-05-25
  */
 public class List1 extends ActionBarActivity {
 
@@ -62,7 +62,7 @@ public class List1 extends ActionBarActivity {
                 public void run() {
                     View delete = findViewById(R.id.action_delete);
                     if (delete != null) {
-                        listView.addMenu(delete, MenuType.DELETE);
+                        listView.addMenuZone(delete, MenuZone.Type.DELETE);
                     }
                 }
             });

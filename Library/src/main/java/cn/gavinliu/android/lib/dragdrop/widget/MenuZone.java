@@ -1,17 +1,17 @@
-package cn.gavinliu.android.lib.dragdrop;
+package cn.gavinliu.android.lib.dragdrop.widget;
 
 import android.view.View;
 
 /**
- * Created by gavin on 15-5-15.
+ * Created by GavinLiu on 2015-5-15.
  */
-public class MenuZone implements DragDropController.DragDropListener {
+public class MenuZone implements DragOrDroppable {
 
     public View menuView;
-    public MenuType menuType;
+    public Type menuType;
     public int x, y, w, h;
 
-    public MenuZone(View menuView, MenuType menuType) {
+    public MenuZone(View menuView, Type menuType) {
         this.menuView = menuView;
         this.menuType = menuType;
 
@@ -21,6 +21,10 @@ public class MenuZone implements DragDropController.DragDropListener {
         this.y = position[1];
         this.w = menuView.getWidth();
         this.h = menuView.getHeight();
+    }
+
+    public enum Type {
+        NORMAL, DELETE
     }
 
     public int getId() {
@@ -37,27 +41,27 @@ public class MenuZone implements DragDropController.DragDropListener {
     }
 
     @Override
-    public void onDragStart() {
+    public void dragStart() {
 
     }
 
     @Override
-    public void onDragEnter() {
+    public void dragEnter() {
         menuView.setPressed(true);
     }
 
     @Override
-    public void onDragExit() {
+    public void dragExit() {
         menuView.setPressed(false);
     }
 
     @Override
-    public void onDragEnd() {
+    public void dragEnd() {
         menuView.setPressed(false);
     }
 
     @Override
-    public void onDrop(int menuId, int itemPosition, long itemId) {
+    public void drop(int menuId, int itemPosition, long itemId) {
 
     }
 }

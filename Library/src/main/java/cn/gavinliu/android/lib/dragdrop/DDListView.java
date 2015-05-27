@@ -1,10 +1,8 @@
 package cn.gavinliu.android.lib.dragdrop;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -16,16 +14,14 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import cn.gavinliu.android.lib.dragdrop.widget.DragOrDroppable;
+import cn.gavinliu.android.lib.dragdrop.widget.MenuZone;
 
 /**
- * Created by gavin on 15-5-13.
+ * Created by GavinLiu on 2015-5-13.
  */
-public class DDListView extends ListView implements
-        DragDropController.DragDropListener,
+public class DDListView extends ListView implements DragOrDroppable,
         AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, AbsListView.OnScrollListener {
 
     private DragDropController mDDController;
@@ -55,7 +51,7 @@ public class DDListView extends ListView implements
 
     private void init() {
         mDDController = new DragDropController(getContext());
-        mDDController.setDragDropListener(this);
+        mDDController.setDragOrDroppable(this);
         setOnItemLongClickListener(this);
         setOnScrollListener(this);
     }
@@ -73,7 +69,7 @@ public class DDListView extends ListView implements
         void onDrop(int menuId, int itemPosition, long itemId);
     }
 
-    public void addMenu(View v, MenuType menuType) {
+    public void addMenuZone(View v, MenuZone.Type menuType) {
         MenuZone menuZone = new MenuZone(v, menuType);
         mDDController.addMenuZone(menuZone);
     }
@@ -171,27 +167,27 @@ public class DDListView extends ListView implements
     }
 
     @Override
-    public void onDragStart() {
+    public void dragStart() {
 
     }
 
     @Override
-    public void onDragEnter() {
+    public void dragEnter() {
 
     }
 
     @Override
-    public void onDragExit() {
+    public void dragExit() {
 
     }
 
     @Override
-    public void onDragEnd() {
+    public void dragEnd() {
 
     }
 
     @Override
-    public void onDrop(int menuId, int itemPosition, long itemId) {
+    public void drop(int menuId, int itemPosition, long itemId) {
         exitMultiChoiceMode();
 
         if (onDragDropListener != null) {
