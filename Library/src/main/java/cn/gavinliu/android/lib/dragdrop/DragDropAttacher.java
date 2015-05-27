@@ -2,21 +2,22 @@ package cn.gavinliu.android.lib.dragdrop;
 
 import android.app.Activity;
 import android.content.res.Resources;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import cn.gavinliu.android.lib.dragdrop.header.DefaultHeaderTransformer;
-import cn.gavinliu.android.lib.dragdrop.header.HeaderTransformer;
+import cn.gavinliu.android.lib.dragdrop.transformer.DefaultHeaderTransformer;
+import cn.gavinliu.android.lib.dragdrop.transformer.FooterTransformer;
+import cn.gavinliu.android.lib.dragdrop.transformer.HeaderTransformer;
 
 /**
  * Created by GavinLiu on 2015-05-27
  */
-public class DragDropAttacher {
+public class DragDropAttacher<T> {
 
     private HeaderTransformer mHeaderTransformer;
+    private FooterTransformer mfooterTransformer;
 
     private View mHeaderView;
 
@@ -37,6 +38,7 @@ public class DragDropAttacher {
 
         mHeaderTransformer = new DefaultHeaderTransformer();
         mHeaderTransformer.onViewCreated(activity, mHeaderView);
+
     }
 
     public void startDrag() {

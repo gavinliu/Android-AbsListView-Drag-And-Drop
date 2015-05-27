@@ -1,4 +1,4 @@
-package cn.gavinliu.android.lib.dragdrop.header;
+package cn.gavinliu.android.lib.dragdrop.transformer;
 
 import android.app.Activity;
 import android.view.View;
@@ -6,7 +6,7 @@ import android.view.View;
 /**
  * Created by GavinLiu on 2015-05-27
  */
-public abstract class HeaderTransformer {
+public abstract class HeaderTransformer extends Transformer{
 
     public void onViewCreated(Activity activity, View headerView) {
     }
@@ -18,9 +18,5 @@ public abstract class HeaderTransformer {
     public void onSelectionChange(int selectCount) {
 
     }
-
-    public abstract boolean showHeaderView();
-
-    public abstract boolean hideHeaderView();
 
 }
