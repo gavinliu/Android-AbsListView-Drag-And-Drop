@@ -1,9 +1,7 @@
 package cn.gavinliu.draganddroplistview;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -15,11 +13,11 @@ import java.util.List;
 
 import cn.gavinliu.android.lib.dragdrop.DDListView;
 import cn.gavinliu.android.lib.dragdrop.DragDropAttacher;
+import cn.gavinliu.android.lib.dragdrop.SelectionMode;
 import cn.gavinliu.android.lib.dragdrop.listener.OnDragDropListener;
 import cn.gavinliu.android.lib.dragdrop.transformer.DefaultFooterTransformer;
 import cn.gavinliu.android.lib.dragdrop.transformer.DefaultHeaderTransformer;
 import cn.gavinliu.android.lib.dragdrop.widget.MenuZone;
-import cn.gavinliu.android.lib.dragdrop.SelectionMode;
 
 /**
  * Created by GavinLiu on 2015-05-25
@@ -44,7 +42,7 @@ public class List2 extends ActionBarActivity {
         listView.setOnDragDropListener(onDragDropListener);
         listView.setDragDropAttacher(new DragDropAttacher(new DefaultHeaderTransformer(this), new DefaultFooterTransformer(this)));
         listView.addMenuZone(findViewById(R.id.btn_delete), MenuZone.Type.DELETE);
-        listView.setIsSwipChoise(true);
+        listView.setIsSwipeChoise(true);
     }
 
     private OnDragDropListener onDragDropListener = new OnDragDropListener() {

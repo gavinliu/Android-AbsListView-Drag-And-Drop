@@ -44,7 +44,7 @@ public class List1 extends ActionBarActivity {
         listView.setOnDragDropListener(onDragDropListener);
         listView.setSelectionMode(SelectionMode.Official);
         listView.setMultiChoiceModeListener(multiChoiceModeListener);
-        listView.setIsSwipChoise(true);
+        listView.setIsSwipeChoise(true);
     }
 
     private AbsListView.MultiChoiceModeListener multiChoiceModeListener = new AbsListView.MultiChoiceModeListener() {

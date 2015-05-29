@@ -2,18 +2,47 @@
 
 A complex ListView & GridView with Drag and Drop functionality.
 
-* drag a item to drop menu view, call back drop function.
+* Drag a item to drop menu view, call back drop function.
 
-* swip choose item
+* Swipe choose item
 
-## DDListView
+## Usage
+
+### Multi Choose
+
+#### SelectionMode
+
+1. SelectionMode.Official
+It`s ``AbsListView.setChoiceMode(CHOICE_MODE_MULTIPLE_MODAL)``, you also need ``setMultiChoiceModeListener()``.
+
+```java
+listView.setSelectionMode(SelectionMode.Official);
+
+listView.setMultiChoiceModeListener(multiChoiceModeListener);
+```
+
+2. SelectionMode.Custom
+It`s a custom multi choose mode, you should use ``DragDropAttacher``.
+
+```java
+listView.setSelectionMode(SelectionMode.Custom);
+
+listView.setDragDropAttacher(new DragDropAttacher(new DefaultHeaderTransformer(this), new DefaultFooterTransformer(this)));
+```
+
+#### Swipe choose
+
+if SwipeChoise is true, the drag animation will invalid.
+
+```java
+listView.setIsSwipeChoise(true);
+```
+
+### DDListView
 
 
+### DDGridView
 
-## TODO
-
-* SwipChoise
-* DDGridView
 
 ## License
 

@@ -15,7 +15,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import cn.gavinliu.android.lib.dragdrop.listener.OnDragDropListener;
 import cn.gavinliu.android.lib.dragdrop.widget.DragOrDroppable;
@@ -38,7 +37,7 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
 
     private boolean isMultChoise;
 
-    private boolean isSwipChoise;
+    private boolean isSwipeChoise;
 
     private boolean isHandleItem;
 
@@ -83,7 +82,7 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
 
-        if (!isSwipChoise) {
+        if (!isSwipeChoise) {
             mDDController.startDrag(view, position, id);
         } else {
             isHandleItem = true;
@@ -164,7 +163,7 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
                 if (mCheckLongClick != null && (Math.abs(mLastMotionX - x) > TOUCH_SLOP || Math.abs(mLastMotionY - y) > TOUCH_SLOP)) {
                     removeCallbacks(mCheckLongClick);
                 }
-                if (isHandleItem && isSwipChoise) {
+                if (isHandleItem && isSwipeChoise) {
                     int position = pointToPosition(x, y);
                     if (position > 0 && position < getAdapter().getCount() && position != tempPositon) {
                         boolean isChecked = isItemChecked(position);
@@ -376,7 +375,7 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
         }
     }
 
-    public void setIsSwipChoise(boolean isSwipChoise) {
-        this.isSwipChoise = isSwipChoise;
+    public void setIsSwipeChoise(boolean isSwipeChoise) {
+        this.isSwipeChoise = isSwipeChoise;
     }
 }
