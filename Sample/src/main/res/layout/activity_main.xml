@@ -8,13 +8,25 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical|left"
         android:onClick="list1"
-        android:text="List1" />
+        android:text="ListView: SelectionMode.Official"
+        android:textAllCaps="false" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical|left"
         android:onClick="list2"
-        android:text="List2" />
+        android:text="ListView: SelectionMode.Custom"
+        android:textAllCaps="false" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|left"
+        android:onClick="list3"
+        android:text="ListView: Swipe choose"
+        android:textAllCaps="false" />
 
 </LinearLayout>

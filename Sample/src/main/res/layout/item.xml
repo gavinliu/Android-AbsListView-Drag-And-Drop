@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<cn.gavinliu.draganddroplistview.MyLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@drawable/list_item_choose_bg"
     android:padding="16dp">
 
     <TextView
@@ -12,12 +12,12 @@
         android:gravity="center_vertical"
         android:textSize="16sp" />
 
-    <CheckBox
-        android:id="@android:id/checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
+    <View
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="right|center_vertical"
+        android:background="@drawable/list_item_choose_bg"
+        android:clickable="false"
         android:focusable="false" />
 
-</RelativeLayout>
+</cn.gavinliu.draganddroplistview.MyLayout>

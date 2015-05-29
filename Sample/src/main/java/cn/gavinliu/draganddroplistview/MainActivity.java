@@ -21,4 +21,8 @@ public class MainActivity extends ActionBarActivity {
         startActivity(new Intent(this, List2.class));
     }
 
+    public void list3(View v) {
+        startActivity(new Intent(this, List3.class));
+    }
+
 }
