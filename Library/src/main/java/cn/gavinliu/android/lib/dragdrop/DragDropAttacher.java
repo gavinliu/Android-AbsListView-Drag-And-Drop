@@ -14,7 +14,7 @@ import cn.gavinliu.android.lib.dragdrop.transformer.HeaderTransformer;
 /**
  * Created by GavinLiu on 2015-05-27
  */
-public class DragDropAttacher<T> {
+public class DragDropAttacher {
 
     private HeaderTransformer mHeaderTransformer;
     private FooterTransformer mfooterTransformer;
@@ -38,11 +38,18 @@ public class DragDropAttacher<T> {
 
         mHeaderTransformer = new DefaultHeaderTransformer();
         mHeaderTransformer.onViewCreated(activity, mHeaderView);
-
     }
 
     public void startDrag() {
-        mHeaderTransformer.showHeaderView();
+        mHeaderTransformer.showContentView();
+    }
+
+    public void updateChooseCount(int count) {
+        mHeaderTransformer.updateChooseCount(count);
+    }
+
+    public void setMultiChoosable(MultiChoosable multiChoosable) {
+        mHeaderTransformer.setMultiChoosable(multiChoosable);
     }
 
     private int getInternalDimensionSize(Resources res, String key) {

@@ -14,15 +14,16 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import cn.gavinliu.android.lib.dragdrop.listener.OnDragDropListener;
 import cn.gavinliu.android.lib.dragdrop.widget.DragOrDroppable;
 import cn.gavinliu.android.lib.dragdrop.widget.MenuZone;
 
 /**
- * Created by GavinLiu on 2015-5-13.
+ * Created by GavinLiu on 2015-5-13
  */
-public class DDListView extends ListView implements DragOrDroppable,
+public class DDListView extends ListView implements DragOrDroppable, MultiChoosable,
         AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, AbsListView.OnScrollListener {
 
     private DragDropController mDDController;
@@ -35,6 +36,8 @@ public class DDListView extends ListView implements DragOrDroppable,
     private int mLastMotionX, mLastMotionY;
 
     private boolean isMultChoise;
+
+    private boolean isSwipChoise;
 
     public DDListView(Context context) {
         super(context);
@@ -54,6 +57,7 @@ public class DDListView extends ListView implements DragOrDroppable,
     private void init() {
         mDDController = new DragDropController(getContext());
         mDDController.setDragOrDroppable(this);
+        setOnItemClickListener(this);
         setOnItemLongClickListener(this);
         setOnScrollListener(this);
     }
@@ -65,6 +69,10 @@ public class DDListView extends ListView implements DragOrDroppable,
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        if (isMultChoise && mSelectionMode == SelectionMode.Custom) {
+            mDragDropAttacher.updateChooseCount(getCheckedItemCount());
+        }
 
     }
 
@@ -80,6 +88,8 @@ public class DDListView extends ListView implements DragOrDroppable,
                 setItemChecked(position, true);
 
                 mDragDropAttacher.startDrag();
+                mDragDropAttacher.updateChooseCount(getCheckedItemCount());
+
                 break;
         }
 
@@ -203,13 +213,38 @@ public class DDListView extends ListView implements DragOrDroppable,
         }
     }
 
+    @Override
+    public void multiChooseAll() {
+        int count = getAdapter().getCount();
+        for (int i = 0; i < count; i++) {
+            setItemChecked(i, true);
+        }
+
+        if (isMultChoise && mSelectionMode == SelectionMode.Custom) {
+            mDragDropAttacher.updateChooseCount(getCheckedItemCount());
+        }
+    }
+
+    @Override
+    public void clearMultiChoose() {
+        int count = getAdapter().getCount();
+        for (int i = 0; i < count; i++) {
+            setItemChecked(i, false);
+        }
+
+        if (isMultChoise && mSelectionMode == SelectionMode.Custom) {
+            mDragDropAttacher.updateChooseCount(getCheckedItemCount());
+        }
+    }
+
+    @Override
     public void exitMultiChoiceMode() {
-        clearChoices();
+        clearMultiChoose();
         isMultChoise = false;
         switch (mSelectionMode) {
             case Custom:
                 // TODO bad code,
-                ((BaseAdapter)getAdapter()).notifyDataSetChanged();
+                ((BaseAdapter) getAdapter()).notifyDataSetChanged();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -225,6 +260,7 @@ public class DDListView extends ListView implements DragOrDroppable,
                 break;
         }
     }
+
 
     private class MultiChoiceModeWrapper implements MultiChoiceModeListener {
         MultiChoiceModeListener mWrapped;
@@ -292,6 +328,7 @@ public class DDListView extends ListView implements DragOrDroppable,
 
     public void setDragDropAttacher(DragDropAttacher dragDropAttacher) {
         this.mDragDropAttacher = dragDropAttacher;
+        mDragDropAttacher.setMultiChoosable(this);
     }
 
     public void setSelectionMode(SelectionMode selectionMode) {

@@ -35,22 +35,6 @@ public class List2 extends ActionBarActivity {
         setupListView();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        new Handler().post(new Runnable() {
-
-            @Override
-            public void run() {
-                View delete = findViewById(R.id.action_delete);
-                if (delete != null) {
-                    listView.addMenuZone(delete, MenuZone.Type.DELETE);
-                }
-            }
-        });
-        return true;
-    }
-
     private void setupListView() {
         listView = (DDListView) findViewById(R.id.list);
         listView.setAdapter(adapter);
