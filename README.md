@@ -13,7 +13,8 @@ A complex ListView & GridView with Drag and Drop functionality.
 #### SelectionMode
 
 1. SelectionMode.Official
-It`s ``AbsListView.setChoiceMode(CHOICE_MODE_MULTIPLE_MODAL)``, you also need ``setMultiChoiceModeListener()``.
+
+It is ``AbsListView.setChoiceMode(CHOICE_MODE_MULTIPLE_MODAL)``, you also need ``setMultiChoiceModeListener()``.
 
 ```java
 listView.setSelectionMode(SelectionMode.Official);
@@ -22,7 +23,8 @@ listView.setMultiChoiceModeListener(multiChoiceModeListener);
 ```
 
 2. SelectionMode.Custom
-It`s a custom multi choose mode, you should use ``DragDropAttacher``.
+
+It is a custom multi choose mode, you should use ``DragDropAttacher``.
 
 ```java
 listView.setSelectionMode(SelectionMode.Custom);
