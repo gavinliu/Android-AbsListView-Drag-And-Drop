@@ -30,7 +30,7 @@ public class DefaultHeaderTransformer extends HeaderTransformer implements View.
         ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
         mHeaderView = LayoutInflater.from(activity.getApplicationContext()).inflate(R.layout.header, null);
 
-        int statusHeight = Tools.getInternalDimensionSize(activity.getResources(), "status_bar_height");
+        int statusHeight = getInternalDimensionSize(activity.getResources(), "status_bar_height");
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 56 * 3 + statusHeight);
         params.gravity = Gravity.TOP;
         mHeaderView.setLayoutParams(params);

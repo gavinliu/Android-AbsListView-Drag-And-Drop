@@ -1,5 +1,7 @@
 package cn.gavinliu.android.lib.dragdrop.transformer;
 
+import android.content.res.Resources;
+
 import cn.gavinliu.android.lib.dragdrop.DragDropAttacher;
 import cn.gavinliu.android.lib.dragdrop.MultiChoosable;
 
@@ -28,5 +30,14 @@ public abstract class Transformer {
     public abstract boolean showContentView();
 
     public abstract boolean hideContentView();
+
+    protected int getInternalDimensionSize(Resources res, String key) {
+        int result = 0;
+        int resourceId = res.getIdentifier(key, "dimen", "android");
+        if (resourceId > 0) {
+            result = res.getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
 
 }

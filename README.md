@@ -1,7 +1,10 @@
 ## Android-AbsListView-Drag-And-Drop
 
-A complex ListView & GridView with Drag and Drop functionality,
-You can drag a item to drop menu view, call back drop function.
+A complex ListView & GridView with Drag and Drop functionality.
+
+* drag a item to drop menu view, call back drop function.
+
+* swip choose item
 
 ## DDListView
 
@@ -9,9 +12,8 @@ You can drag a item to drop menu view, call back drop function.
 
 ## TODO
 
-* MultiChoiceMode
+* SwipChoise
 * DDGridView
-
 
 ## License
 

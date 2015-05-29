@@ -1,7 +1,5 @@
 package cn.gavinliu.android.lib.dragdrop;
 
-import android.view.View;
-
 import cn.gavinliu.android.lib.dragdrop.transformer.FooterTransformer;
 import cn.gavinliu.android.lib.dragdrop.transformer.HeaderTransformer;
 
@@ -12,8 +10,6 @@ public class DragDropAttacher {
 
     private HeaderTransformer mHeaderTransformer;
     private FooterTransformer mFooterTransformer;
-
-    private View mHeaderView;
 
     public DragDropAttacher(HeaderTransformer headerTransformer, FooterTransformer footerTransformer) {
         setTransformer(headerTransformer, footerTransformer);

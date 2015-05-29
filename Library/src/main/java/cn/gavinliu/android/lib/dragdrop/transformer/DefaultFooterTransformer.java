@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import cn.gavinliu.android.lib.dragdrop.R;
-import cn.gavinliu.android.lib.dragdrop.Tools;
 
 /**
  * Created by GavinLiu on 2015-05-27
