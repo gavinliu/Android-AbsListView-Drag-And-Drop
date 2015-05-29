@@ -16,6 +16,8 @@ import java.util.List;
 import cn.gavinliu.android.lib.dragdrop.DDListView;
 import cn.gavinliu.android.lib.dragdrop.DragDropAttacher;
 import cn.gavinliu.android.lib.dragdrop.listener.OnDragDropListener;
+import cn.gavinliu.android.lib.dragdrop.transformer.DefaultFooterTransformer;
+import cn.gavinliu.android.lib.dragdrop.transformer.DefaultHeaderTransformer;
 import cn.gavinliu.android.lib.dragdrop.widget.MenuZone;
 import cn.gavinliu.android.lib.dragdrop.SelectionMode;
 
@@ -40,7 +42,9 @@ public class List2 extends ActionBarActivity {
         listView.setAdapter(adapter);
         listView.setSelectionMode(SelectionMode.Custom);
         listView.setOnDragDropListener(onDragDropListener);
-        listView.setDragDropAttacher(new DragDropAttacher(this));
+        listView.setDragDropAttacher(new DragDropAttacher(new DefaultHeaderTransformer(this), new DefaultFooterTransformer(this)));
+
+        listView.addMenuZone(findViewById(R.id.btn_delete), MenuZone.Type.DELETE);
     }
 
     private OnDragDropListener onDragDropListener = new OnDragDropListener() {
@@ -67,7 +71,7 @@ public class List2 extends ActionBarActivity {
 
         @Override
         public void onDrop(int menuId, int itemPosition, long itemId) {
-            if (menuId == R.id.action_delete) {
+            if (menuId == R.id.btn_delete) {
                 list.remove(itemPosition);
                 adapter.notifyDataSetChanged();
             }

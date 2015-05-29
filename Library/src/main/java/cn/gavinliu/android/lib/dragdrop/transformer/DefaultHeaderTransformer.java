@@ -5,11 +5,16 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import cn.gavinliu.android.lib.dragdrop.R;
+import cn.gavinliu.android.lib.dragdrop.Tools;
 
 /**
  * Created by GavinLiu on 2015-05-27
@@ -19,12 +24,24 @@ public class DefaultHeaderTransformer extends HeaderTransformer implements View.
     private View mHeaderView;
     private TextView mInfo;
 
-    boolean isAll = false;
+    private boolean isAll = false;
+
+    public DefaultHeaderTransformer(Activity activity) {
+        ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
+        mHeaderView = LayoutInflater.from(activity.getApplicationContext()).inflate(R.layout.header, null);
+
+        int statusHeight = Tools.getInternalDimensionSize(activity.getResources(), "status_bar_height");
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 56 * 3 + statusHeight);
+        params.gravity = Gravity.TOP;
+        mHeaderView.setLayoutParams(params);
+        mHeaderView.setPadding(0, statusHeight, 0, 0);
+        decorView.addView(mHeaderView);
+        mHeaderView.setVisibility(View.INVISIBLE);
+    }
 
     @Override
-    public void onViewCreated(Activity activity, View headerView) {
-        super.onViewCreated(activity, headerView);
-        mHeaderView = headerView;
+    public void onViewCreated() {
+        super.onViewCreated();
 
         mInfo = (TextView) mHeaderView.findViewById(R.id.txt_info);
         Button mAll = (Button) mHeaderView.findViewById(R.id.btn_all);
@@ -106,6 +123,7 @@ public class DefaultHeaderTransformer extends HeaderTransformer implements View.
         } else if (v.getId() == R.id.btn_cancel) {
             mMultiChoosable.exitMultiChoiceMode();
             hideContentView();
+            mDragDropAttacher.getFooterTransformer().hideContentView();
         }
     }
 

@@ -87,7 +87,7 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
                 setChoiceMode(DDListView.CHOICE_MODE_MULTIPLE);
                 setItemChecked(position, true);
 
-                mDragDropAttacher.startDrag();
+                mDragDropAttacher.show();
                 mDragDropAttacher.updateChooseCount(getCheckedItemCount());
 
                 break;
@@ -169,8 +169,9 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && isMultChoise) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && isMultChoise && mSelectionMode == SelectionMode.Custom) {
             exitMultiChoiceMode();
+            mDragDropAttacher.hide();
             return true;
         }
         return super.onKeyUp(keyCode, event);
@@ -206,11 +207,15 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
 
     @Override
     public void drop(int menuId, int itemPosition, long itemId) {
-        exitMultiChoiceMode();
-
         if (onDragDropListener != null) {
             onDragDropListener.onDrop(menuId, itemPosition, itemId);
         }
+
+        exitMultiChoiceMode();
+        if (mSelectionMode == SelectionMode.Custom) {
+            mDragDropAttacher.hide();
+        }
+
     }
 
     @Override

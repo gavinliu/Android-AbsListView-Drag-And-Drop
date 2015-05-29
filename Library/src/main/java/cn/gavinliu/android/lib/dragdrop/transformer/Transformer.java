@@ -1,8 +1,6 @@
 package cn.gavinliu.android.lib.dragdrop.transformer;
 
-import android.app.Activity;
-import android.view.View;
-
+import cn.gavinliu.android.lib.dragdrop.DragDropAttacher;
 import cn.gavinliu.android.lib.dragdrop.MultiChoosable;
 
 /**
@@ -11,8 +9,9 @@ import cn.gavinliu.android.lib.dragdrop.MultiChoosable;
 public abstract class Transformer {
 
     protected MultiChoosable mMultiChoosable;
+    protected DragDropAttacher mDragDropAttacher;
 
-    public void onViewCreated(Activity activity, View headerView) {
+    public void onViewCreated() {
     }
 
     public void onReset() {
@@ -20,6 +19,10 @@ public abstract class Transformer {
 
     public void setMultiChoosable(MultiChoosable multiChoosable) {
         this.mMultiChoosable = multiChoosable;
+    }
+
+    public void setDragDropAttacher(DragDropAttacher dragDropAttacher) {
+        this.mDragDropAttacher = dragDropAttacher;
     }
 
     public abstract boolean showContentView();

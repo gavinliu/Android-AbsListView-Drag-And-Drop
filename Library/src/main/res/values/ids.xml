@@ -3,4 +3,5 @@
     <item name="btn_all" type="id" />
     <item name="txt_info" type="id" />
     <item name="btn_cancel" type="id" />
+    <item name="btn_delete" type="id" />
 </resources>

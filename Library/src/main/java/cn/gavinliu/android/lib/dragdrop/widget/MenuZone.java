@@ -14,13 +14,6 @@ public class MenuZone implements DragOrDroppable {
     public MenuZone(View menuView, Type menuType) {
         this.menuView = menuView;
         this.menuType = menuType;
-
-        int[] position = new int[2];
-        menuView.getLocationOnScreen(position);
-        this.x = position[0];
-        this.y = position[1];
-        this.w = menuView.getWidth();
-        this.h = menuView.getHeight();
     }
 
     public enum Type {
@@ -37,6 +30,14 @@ public class MenuZone implements DragOrDroppable {
     }
 
     public boolean isContains(float touchX, float touchY) {
+
+        int[] position = new int[2];
+        menuView.getLocationOnScreen(position);
+        this.x = position[0];
+        this.y = position[1];
+        this.w = menuView.getWidth();
+        this.h = menuView.getHeight();
+
         return touchX > x && touchX < x + w && touchY > y && touchY < y + h;
     }
 

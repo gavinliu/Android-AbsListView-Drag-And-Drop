@@ -1,13 +1,7 @@
 package cn.gavinliu.android.lib.dragdrop;
 
-import android.app.Activity;
-import android.content.res.Resources;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
-import cn.gavinliu.android.lib.dragdrop.transformer.DefaultHeaderTransformer;
 import cn.gavinliu.android.lib.dragdrop.transformer.FooterTransformer;
 import cn.gavinliu.android.lib.dragdrop.transformer.HeaderTransformer;
 
@@ -17,31 +11,22 @@ import cn.gavinliu.android.lib.dragdrop.transformer.HeaderTransformer;
 public class DragDropAttacher {
 
     private HeaderTransformer mHeaderTransformer;
-    private FooterTransformer mfooterTransformer;
+    private FooterTransformer mFooterTransformer;
 
     private View mHeaderView;
 
-    public DragDropAttacher(Activity activity) {
-        if (activity == null) {
-            throw new IllegalArgumentException("activity cannot be null");
-        }
-
-        ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
-        mHeaderView = LayoutInflater.from(activity.getApplicationContext()).inflate(R.layout.header, null);
-
-        int statusHeight = getInternalDimensionSize(activity.getResources(), "status_bar_height");
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 56 * 3 + statusHeight);
-        mHeaderView.setLayoutParams(params);
-        mHeaderView.setPadding(0, statusHeight, 0, 0);
-        decorView.addView(mHeaderView);
-        mHeaderView.setVisibility(View.INVISIBLE);
-
-        mHeaderTransformer = new DefaultHeaderTransformer();
-        mHeaderTransformer.onViewCreated(activity, mHeaderView);
+    public DragDropAttacher(HeaderTransformer headerTransformer, FooterTransformer footerTransformer) {
+        setTransformer(headerTransformer, footerTransformer);
     }
 
-    public void startDrag() {
+    public void show() {
         mHeaderTransformer.showContentView();
+        mFooterTransformer.showContentView();
+    }
+
+    public void hide(){
+        mHeaderTransformer.hideContentView();
+        mFooterTransformer.hideContentView();
     }
 
     public void updateChooseCount(int count) {
@@ -52,12 +37,19 @@ public class DragDropAttacher {
         mHeaderTransformer.setMultiChoosable(multiChoosable);
     }
 
-    private int getInternalDimensionSize(Resources res, String key) {
-        int result = 0;
-        int resourceId = res.getIdentifier(key, "dimen", "android");
-        if (resourceId > 0) {
-            result = res.getDimensionPixelSize(resourceId);
-        }
-        return result;
+    public FooterTransformer getFooterTransformer() {
+        return mFooterTransformer;
     }
+
+    public void setTransformer(HeaderTransformer header, FooterTransformer footer) {
+        mHeaderTransformer = header;
+        mFooterTransformer = footer;
+
+        mHeaderTransformer.onViewCreated();
+        mFooterTransformer.onViewCreated();
+
+        mHeaderTransformer.setDragDropAttacher(this);
+        mFooterTransformer.setDragDropAttacher(this);
+    }
+
 }
