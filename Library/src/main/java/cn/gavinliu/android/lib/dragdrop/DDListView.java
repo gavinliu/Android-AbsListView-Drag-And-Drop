@@ -3,6 +3,7 @@ package cn.gavinliu.android.lib.dragdrop;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -38,6 +39,8 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
     private boolean isMultChoise;
 
     private boolean isSwipChoise;
+
+    private boolean isHandleItem;
 
     public DDListView(Context context) {
         super(context);
@@ -79,7 +82,13 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-        mDDController.startDrag(view, position, id);
+
+        if (!isSwipChoise) {
+            mDDController.startDrag(view, position, id);
+        } else {
+            isHandleItem = true;
+            tempPositon = position;
+        }
 
         switch (mSelectionMode) {
             case Custom:
@@ -125,6 +134,8 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
         return super.onInterceptTouchEvent(ev);
     }
 
+    int tempPositon = -1;
+
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
 
@@ -153,6 +164,20 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
                 if (mCheckLongClick != null && (Math.abs(mLastMotionX - x) > TOUCH_SLOP || Math.abs(mLastMotionY - y) > TOUCH_SLOP)) {
                     removeCallbacks(mCheckLongClick);
                 }
+                if (isHandleItem && isSwipChoise) {
+                    int position = pointToPosition(x, y);
+                    if (position > 0 && position < getAdapter().getCount() && position != tempPositon) {
+                        boolean isChecked = isItemChecked(position);
+                        setItemChecked(position, !isChecked);
+
+                        Log.d("select:", "position:" + position + ", " + !isChecked);
+
+                        tempPositon = position;
+                        if (mDragDropAttacher != null) {
+                            mDragDropAttacher.updateChooseCount(getCheckedItemCount());
+                        }
+                    }
+                }
 
                 break;
 
@@ -161,6 +186,8 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
                 if (mCheckLongClick != null) {
                     removeCallbacks(mCheckLongClick);
                 }
+                isHandleItem = false;
+                tempPositon = -1;
                 break;
         }
 
@@ -307,9 +334,11 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
             if (isDraggable) {
                 int item = position - getFirstVisiblePosition();
                 View v = getChildAt(item);
-                mDDController.startDrag(v, position, id);
                 isDraggable = false;
+
+                onItemLongClick(DDListView.this, v, position, id);
             }
+            mWrapped.onItemCheckedStateChanged(mode, position, id, checked);
         }
     }
 
@@ -323,6 +352,7 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
             View selectedView = getChildAt(itemNum);
 
             setItemChecked(position, true);
+
             onItemLongClick(DDListView.this, selectedView, position, id);
         }
     }
@@ -346,4 +376,7 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
         }
     }
 
+    public void setIsSwipChoise(boolean isSwipChoise) {
+        this.isSwipChoise = isSwipChoise;
+    }
 }

@@ -44,6 +44,7 @@ public class List1 extends ActionBarActivity {
         listView.setOnDragDropListener(onDragDropListener);
         listView.setSelectionMode(SelectionMode.Official);
         listView.setMultiChoiceModeListener(multiChoiceModeListener);
+        listView.setIsSwipChoise(true);
     }
 
     private AbsListView.MultiChoiceModeListener multiChoiceModeListener = new AbsListView.MultiChoiceModeListener() {
@@ -82,7 +83,15 @@ public class List1 extends ActionBarActivity {
 
         @Override
         public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-
+            final int checkedCount = listView.getCheckedItemCount();
+            switch (checkedCount) {
+                case 0:
+                    mode.setSubtitle("Select Item");
+                    break;
+                default:
+                    mode.setSubtitle("" + checkedCount);
+                    break;
+            }
         }
     };
 

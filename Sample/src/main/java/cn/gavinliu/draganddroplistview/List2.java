@@ -43,8 +43,8 @@ public class List2 extends ActionBarActivity {
         listView.setSelectionMode(SelectionMode.Custom);
         listView.setOnDragDropListener(onDragDropListener);
         listView.setDragDropAttacher(new DragDropAttacher(new DefaultHeaderTransformer(this), new DefaultFooterTransformer(this)));
-
         listView.addMenuZone(findViewById(R.id.btn_delete), MenuZone.Type.DELETE);
+        listView.setIsSwipChoise(true);
     }
 
     private OnDragDropListener onDragDropListener = new OnDragDropListener() {

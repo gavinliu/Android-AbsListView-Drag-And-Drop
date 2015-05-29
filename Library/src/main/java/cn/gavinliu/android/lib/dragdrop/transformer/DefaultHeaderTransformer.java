@@ -14,7 +14,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import cn.gavinliu.android.lib.dragdrop.R;
-import cn.gavinliu.android.lib.dragdrop.Tools;
 
 /**
  * Created by GavinLiu on 2015-05-27
