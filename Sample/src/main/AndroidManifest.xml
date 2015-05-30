@@ -20,6 +20,8 @@
         <activity android:name=".List1" />
         <activity android:name=".List2" />
         <activity android:name=".List3" />
+        <activity android:name=".Grid1" />
+        <activity android:name=".Grid2" />
     </application>
 
 </manifest>

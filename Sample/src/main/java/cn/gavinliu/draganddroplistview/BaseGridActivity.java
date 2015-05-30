@@ -13,21 +13,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import cn.gavinliu.android.lib.dragdrop.DDListView;
+import cn.gavinliu.android.lib.dragdrop.DDGridView;
 import cn.gavinliu.android.lib.dragdrop.listener.OnDragDropListener;
 
 /**
- * Created by GavinLiu on 2015-05-29
+ * Created by GavinLiu on 2015-05-30
  */
-public class BaseListActivity extends ActionBarActivity {
+public class BaseGridActivity extends ActionBarActivity {
 
-    protected DDListView listView;
+    protected DDGridView gridView;
     protected List<String> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list);
+        setContentView(R.layout.activity_grid);
 
         list = new ArrayList<String>(Arrays.asList(Cheeses.sCheeseStrings));
 
@@ -35,10 +35,10 @@ public class BaseListActivity extends ActionBarActivity {
     }
 
     protected void setupListView() {
-        listView = (DDListView) findViewById(R.id.list);
-        listView.setAdapter(adapter);
-        listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-        listView.setOnDragDropListener(onDragDropListener);
+        gridView = (DDGridView) findViewById(R.id.grid);
+        gridView.setAdapter(adapter);
+        gridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+        gridView.setOnDragDropListener(onDragDropListener);
     }
 
     protected BaseAdapter adapter = new BaseAdapter() {
@@ -61,7 +61,7 @@ public class BaseListActivity extends ActionBarActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.item_list, null);
+                convertView = getLayoutInflater().inflate(R.layout.item_grid, null);
             }
 
             TextView tx = (TextView) convertView.findViewById(R.id.text);

@@ -8,7 +8,6 @@ public class List3 extends List1 {
     @Override
     protected void setupListView() {
         super.setupListView();
-
         listView.setIsSwipeChoise(true);
     }
 }

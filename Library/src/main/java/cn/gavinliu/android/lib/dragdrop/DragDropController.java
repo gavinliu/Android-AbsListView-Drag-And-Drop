@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AbsListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,8 @@ public class DragDropController {
     private MenuZone mMenuZone;
 
     private DragOrDroppable mDragOrDroppable;
+
+    private AbsListView mAbsListView;
 
     private List<MenuZone> mMenus;
 
@@ -58,6 +61,10 @@ public class DragDropController {
         mDragView.dragStart();
 
         mIsDragging = true;
+    }
+
+    void startSwipChoose() {
+
     }
 
     boolean onInterceptTouchEvent(MotionEvent ev) {
@@ -167,5 +174,8 @@ public class DragDropController {
 
     public void setDragOrDroppable(DragOrDroppable dragOrDroppable) {
         this.mDragOrDroppable = dragOrDroppable;
+        if (dragOrDroppable instanceof AbsListView) {
+            mAbsListView = (AbsListView) dragOrDroppable;
+        }
     }
 }

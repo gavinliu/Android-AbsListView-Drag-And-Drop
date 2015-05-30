@@ -25,4 +25,11 @@ public class MainActivity extends ActionBarActivity {
         startActivity(new Intent(this, List3.class));
     }
 
+    public void grid1(View v) {
+        startActivity(new Intent(this, Grid1.class));
+    }
+
+    public void grid2(View v) {
+        startActivity(new Intent(this, Grid2.class));
+    }
 }

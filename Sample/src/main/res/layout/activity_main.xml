@@ -29,4 +29,20 @@
         android:text="ListView: Swipe choose"
         android:textAllCaps="false" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|left"
+        android:onClick="grid1"
+        android:text="GridView: SelectionMode.Official"
+        android:textAllCaps="false" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|left"
+        android:onClick="grid2"
+        android:text="GridView: Swipe choose"
+        android:textAllCaps="false" />
+
 </LinearLayout>
