@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Checkable;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 /**
  * Created by GavinLiu on 2015-05-29
@@ -42,13 +41,12 @@ public class MyLayout extends FrameLayout {
         }
     }
 
+    boolean isAnimation;
     boolean activated;
 
     @Override
     public void setActivated(boolean activated) {
-        if (activated && this.activated != activated) {
-            Toast.makeText(getContext(), "setActivated", Toast.LENGTH_SHORT).show();
-
+        if (activated && !this.activated && isAnimation) {
             ObjectAnimator animatorWidth = ObjectAnimator.ofFloat(this, "scaleX", 1f, 0.8f);
             ObjectAnimator animatorHeight = ObjectAnimator.ofFloat(this, "scaleY", 1f, 0.8f);
 
@@ -58,7 +56,7 @@ public class MyLayout extends FrameLayout {
             animatorSet.playTogether(animatorHeight, animatorWidth);
             animatorSet.start();
 
-        } else if (!activated) {
+        } else if (!activated && isAnimation) {
             if (getScaleX() != 1f || getScaleY() != 1f) {
                 ObjectAnimator animatorWidth = ObjectAnimator.ofFloat(this, "scaleX", getScaleX(), 1f);
                 ObjectAnimator animatorHeight = ObjectAnimator.ofFloat(this, "scaleY", getScaleY(), 1f);

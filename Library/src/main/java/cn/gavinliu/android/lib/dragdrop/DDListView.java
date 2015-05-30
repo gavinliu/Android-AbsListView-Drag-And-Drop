@@ -27,19 +27,26 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
         AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, AbsListView.OnScrollListener {
 
     private DragDropController mDDController;
+
     private DragDropAttacher mDragDropAttacher;
+
     private OnDragDropListener onDragDropListener;
+
     private ActionMode mActionMode;
+
     private SelectionMode mSelectionMode;
+
     private CheckLongClick mCheckLongClick;
+
     private static final int TOUCH_SLOP = 10;
+
     private int mLastMotionX, mLastMotionY;
 
-    private boolean isMultChoise;
+    private boolean isMultiChoise;
 
     private boolean isSwipeChoise;
-
     private boolean isHandleItem;
+    private int targetPosition = -1, tempPosition = -1;
 
     public DDListView(Context context) {
         super(context);
@@ -72,7 +79,7 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        if (isMultChoise && mSelectionMode == SelectionMode.Custom) {
+        if (isMultiChoise && mSelectionMode == SelectionMode.Custom) {
             mDragDropAttacher.updateChooseCount(getCheckedItemCount());
         }
 
@@ -86,12 +93,13 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
             mDDController.startDrag(view, position, id);
         } else {
             isHandleItem = true;
-            tempPositon = position;
+            tempPosition = position;
+            targetPosition = position;
         }
 
         switch (mSelectionMode) {
             case Custom:
-                isMultChoise = true;
+                isMultiChoise = true;
                 setChoiceMode(DDListView.CHOICE_MODE_MULTIPLE);
                 setItemChecked(position, true);
 
@@ -133,8 +141,6 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
         return super.onInterceptTouchEvent(ev);
     }
 
-    int tempPositon = -1;
-
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
 
@@ -164,17 +170,40 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
                     removeCallbacks(mCheckLongClick);
                 }
                 if (isHandleItem && isSwipeChoise) {
+
                     int position = pointToPosition(x, y);
-                    if (position > 0 && position < getAdapter().getCount() && position != tempPositon) {
-                        boolean isChecked = isItemChecked(position);
-                        setItemChecked(position, !isChecked);
+                    if (position >= 0 && position < getAdapter().getCount() && position != tempPosition) {
 
-                        Log.d("select:", "position:" + position + ", " + !isChecked);
+                        int i, j;
 
-                        tempPositon = position;
-                        if (mDragDropAttacher != null) {
-                            mDragDropAttacher.updateChooseCount(getCheckedItemCount());
+                        if (targetPosition > position) {
+                            i = position;
+                            j = targetPosition;
+                        } else {
+                            i = targetPosition;
+                            j = position;
                         }
+
+                        if (tempPosition > j) {
+                            for (int temp = tempPosition; temp > j; temp--) {
+                                setItemChecked(temp, false);
+                            }
+                        }
+
+                        if (tempPosition < i) {
+                            for (int temp = tempPosition; temp < i; temp++) {
+                                setItemChecked(temp, false);
+                            }
+                        }
+
+                        for (; i <= j; i++) {
+                            setItemChecked(i, true);
+                            if (mDragDropAttacher != null) {
+                                mDragDropAttacher.updateChooseCount(getCheckedItemCount());
+                            }
+                        }
+
+                        tempPosition = position;
                     }
                 }
 
@@ -186,7 +215,8 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
                     removeCallbacks(mCheckLongClick);
                 }
                 isHandleItem = false;
-                tempPositon = -1;
+                tempPosition = -1;
+                targetPosition = -1;
                 break;
         }
 
@@ -195,7 +225,7 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && isMultChoise && mSelectionMode == SelectionMode.Custom) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && isMultiChoise && mSelectionMode == SelectionMode.Custom) {
             exitMultiChoiceMode();
             mDragDropAttacher.hide();
             return true;
@@ -251,7 +281,7 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
             setItemChecked(i, true);
         }
 
-        if (isMultChoise && mSelectionMode == SelectionMode.Custom) {
+        if (isMultiChoise && mSelectionMode == SelectionMode.Custom) {
             mDragDropAttacher.updateChooseCount(getCheckedItemCount());
         }
     }
@@ -263,7 +293,7 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
             setItemChecked(i, false);
         }
 
-        if (isMultChoise && mSelectionMode == SelectionMode.Custom) {
+        if (isMultiChoise && mSelectionMode == SelectionMode.Custom) {
             mDragDropAttacher.updateChooseCount(getCheckedItemCount());
         }
     }
@@ -271,7 +301,7 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
     @Override
     public void exitMultiChoiceMode() {
         clearMultiChoose();
-        isMultChoise = false;
+        isMultiChoise = false;
         switch (mSelectionMode) {
             case Custom:
                 // TODO bad code,

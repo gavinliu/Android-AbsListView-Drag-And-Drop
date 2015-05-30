@@ -62,10 +62,10 @@ public class List1 extends BaseListActivity {
             final int checkedCount = listView.getCheckedItemCount();
             switch (checkedCount) {
                 case 0:
-                    mode.setSubtitle("Select Item");
+                    mode.setTitle("Select Item");
                     break;
                 default:
-                    mode.setSubtitle("" + checkedCount);
+                    mode.setTitle("" + checkedCount);
                     break;
             }
         }
