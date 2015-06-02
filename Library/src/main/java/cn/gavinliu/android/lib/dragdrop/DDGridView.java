@@ -14,7 +14,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ListView;
 
 import cn.gavinliu.android.lib.dragdrop.listener.OnDragDropListener;
 import cn.gavinliu.android.lib.dragdrop.widget.DragOrDroppable;
@@ -28,7 +27,7 @@ public class DDGridView extends GridView implements DragOrDroppable, MultiChoosa
 
     private DragDropController mDDController;
 
-    private DragDropAttacher mDragDropAttacher;
+    private SelectionAttacher mDragDropAttacher;
 
     private OnDragDropListener onDragDropListener;
 
@@ -390,7 +389,7 @@ public class DDGridView extends GridView implements DragOrDroppable, MultiChoosa
         this.onDragDropListener = onDragDropListener;
     }
 
-    public void setDragDropAttacher(DragDropAttacher dragDropAttacher) {
+    public void setDragDropAttacher(SelectionAttacher dragDropAttacher) {
         this.mDragDropAttacher = dragDropAttacher;
         mDragDropAttacher.setMultiChoosable(this);
     }

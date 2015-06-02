@@ -1,6 +1,6 @@
 package cn.gavinliu.draganddroplistview;
 
-import cn.gavinliu.android.lib.dragdrop.DragDropAttacher;
+import cn.gavinliu.android.lib.dragdrop.SelectionAttacher;
 import cn.gavinliu.android.lib.dragdrop.SelectionMode;
 import cn.gavinliu.android.lib.dragdrop.listener.OnDragDropListener;
 import cn.gavinliu.android.lib.dragdrop.transformer.DefaultFooterTransformer;
@@ -18,7 +18,7 @@ public class List2 extends BaseListActivity {
 
         listView.setSelectionMode(SelectionMode.Custom);
         listView.setOnDragDropListener(onDragDropListener);
-        listView.setDragDropAttacher(new DragDropAttacher(new DefaultHeaderTransformer(this), new DefaultFooterTransformer(this)));
+        listView.setDragDropAttacher(new SelectionAttacher(new DefaultHeaderTransformer(this), new DefaultFooterTransformer(this)));
         listView.addMenuZone(findViewById(R.id.btn_delete), MenuZone.Type.DELETE);
     }
 

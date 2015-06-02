@@ -2,7 +2,7 @@ package cn.gavinliu.android.lib.dragdrop.transformer;
 
 import android.content.res.Resources;
 
-import cn.gavinliu.android.lib.dragdrop.DragDropAttacher;
+import cn.gavinliu.android.lib.dragdrop.SelectionAttacher;
 import cn.gavinliu.android.lib.dragdrop.MultiChoosable;
 
 /**
@@ -11,7 +11,7 @@ import cn.gavinliu.android.lib.dragdrop.MultiChoosable;
 public abstract class Transformer {
 
     protected MultiChoosable mMultiChoosable;
-    protected DragDropAttacher mDragDropAttacher;
+    protected SelectionAttacher mDragDropAttacher;
 
     public void onViewCreated() {
     }
@@ -23,7 +23,7 @@ public abstract class Transformer {
         this.mMultiChoosable = multiChoosable;
     }
 
-    public void setDragDropAttacher(DragDropAttacher dragDropAttacher) {
+    public void setDragDropAttacher(SelectionAttacher dragDropAttacher) {
         this.mDragDropAttacher = dragDropAttacher;
     }
 

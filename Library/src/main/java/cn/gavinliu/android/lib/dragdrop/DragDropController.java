@@ -15,9 +15,9 @@ import cn.gavinliu.android.lib.dragdrop.widget.DragView;
 import cn.gavinliu.android.lib.dragdrop.widget.MenuZone;
 
 /**
- * Created by GavinLiu on 2015-5-15.
+ * Created by GavinLiu on 2015-5-15
  */
-public class DragDropController {
+class DragDropController {
 
     private static final String TAG = "DragDropController";
 
@@ -61,10 +61,6 @@ public class DragDropController {
         mDragView.dragStart();
 
         mIsDragging = true;
-    }
-
-    void startSwipChoose() {
-
     }
 
     boolean onInterceptTouchEvent(MotionEvent ev) {

@@ -6,12 +6,12 @@ import cn.gavinliu.android.lib.dragdrop.transformer.HeaderTransformer;
 /**
  * Created by GavinLiu on 2015-05-27
  */
-public class DragDropAttacher {
+public class SelectionAttacher {
 
     private HeaderTransformer mHeaderTransformer;
     private FooterTransformer mFooterTransformer;
 
-    public DragDropAttacher(HeaderTransformer headerTransformer, FooterTransformer footerTransformer) {
+    public SelectionAttacher(HeaderTransformer headerTransformer, FooterTransformer footerTransformer) {
         setTransformer(headerTransformer, footerTransformer);
     }
 

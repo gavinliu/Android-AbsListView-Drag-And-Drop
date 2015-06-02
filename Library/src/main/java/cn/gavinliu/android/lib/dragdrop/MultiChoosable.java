@@ -3,7 +3,7 @@ package cn.gavinliu.android.lib.dragdrop;
 /**
  * Created by GavinLiu on 2015-05-29
  */
-public interface MultiChoosable {
+interface MultiChoosable {
 
     void multiChooseAll();
 

@@ -3,7 +3,6 @@ package cn.gavinliu.android.lib.dragdrop;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -28,7 +27,7 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
 
     private DragDropController mDDController;
 
-    private DragDropAttacher mDragDropAttacher;
+    private SelectionAttacher mDragDropAttacher;
 
     private OnDragDropListener onDragDropListener;
 
@@ -87,7 +86,6 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
 
         if (!isSwipeChoise) {
             mDDController.startDrag(view, position, id);
@@ -390,7 +388,7 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
         this.onDragDropListener = onDragDropListener;
     }
 
-    public void setDragDropAttacher(DragDropAttacher dragDropAttacher) {
+    public void setDragDropAttacher(SelectionAttacher dragDropAttacher) {
         this.mDragDropAttacher = dragDropAttacher;
         mDragDropAttacher.setMultiChoosable(this);
     }
