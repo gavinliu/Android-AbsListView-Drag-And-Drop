@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -35,17 +34,11 @@ public class DDGridView extends GridView implements DragOrDroppable, MultiChoosa
 
     private SelectionMode mSelectionMode;
 
-    private CheckLongClick mCheckLongClick;
-
-    private static final int TOUCH_SLOP = 10;
-
-    private int mLastMotionX, mLastMotionY;
+    private SelectionController mSelectionController;
 
     private boolean isMultiChoise;
 
     private boolean isSwipeChoise;
-    private boolean isHandleItem;
-    private int targetPosition = -1, tempPosition = -1;
 
     public DDGridView(Context context) {
         super(context);
@@ -65,6 +58,7 @@ public class DDGridView extends GridView implements DragOrDroppable, MultiChoosa
     private void init() {
         mDDController = new DragDropController(getContext());
         mDDController.setDragOrDroppable(this);
+        mSelectionController = new SelectionController(this);
         setOnItemClickListener(this);
         setOnItemLongClickListener(this);
         setOnScrollListener(this);
@@ -87,19 +81,16 @@ public class DDGridView extends GridView implements DragOrDroppable, MultiChoosa
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-
         if (!isSwipeChoise) {
             mDDController.startDrag(view, position, id);
         } else {
-            isHandleItem = true;
-            tempPosition = position;
-            targetPosition = position;
+            mSelectionController.startSelection(position);
         }
 
         switch (mSelectionMode) {
             case Custom:
                 isMultiChoise = true;
-                setChoiceMode(DDGridView.CHOICE_MODE_MULTIPLE);
+                setChoiceMode(DDListView.CHOICE_MODE_MULTIPLE);
                 setItemChecked(position, true);
 
                 mDragDropAttacher.show();
@@ -145,79 +136,7 @@ public class DDGridView extends GridView implements DragOrDroppable, MultiChoosa
 
         mDDController.onTouchEvent(ev);
 
-        int x = (int) ev.getX();
-        int y = (int) ev.getY();
-
-        switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-
-                mLastMotionX = x;
-                mLastMotionY = y;
-
-                if (mActionMode != null) {
-                    if (mCheckLongClick == null) {
-                        mCheckLongClick = new CheckLongClick();
-                    }
-                    int longPressTimeout = ViewConfiguration.getLongPressTimeout();
-                    postDelayed(mCheckLongClick, longPressTimeout);
-                }
-
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-                if (mCheckLongClick != null && (Math.abs(mLastMotionX - x) > TOUCH_SLOP || Math.abs(mLastMotionY - y) > TOUCH_SLOP)) {
-                    removeCallbacks(mCheckLongClick);
-                }
-                if (isHandleItem && isSwipeChoise) {
-
-                    int position = pointToPosition(x, y);
-                    if (position >= 0 && position < getAdapter().getCount() && position != tempPosition) {
-
-                        int i, j;
-
-                        if (targetPosition > position) {
-                            i = position;
-                            j = targetPosition;
-                        } else {
-                            i = targetPosition;
-                            j = position;
-                        }
-
-                        if (tempPosition > j) {
-                            for (int temp = tempPosition; temp > j; temp--) {
-                                setItemChecked(temp, false);
-                            }
-                        }
-
-                        if (tempPosition < i) {
-                            for (int temp = tempPosition; temp < i; temp++) {
-                                setItemChecked(temp, false);
-                            }
-                        }
-
-                        for (; i <= j; i++) {
-                            setItemChecked(i, true);
-                            if (mDragDropAttacher != null) {
-                                mDragDropAttacher.updateChooseCount(getCheckedItemCount());
-                            }
-                        }
-
-                        tempPosition = position;
-                    }
-                }
-
-                break;
-
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                if (mCheckLongClick != null) {
-                    removeCallbacks(mCheckLongClick);
-                }
-                isHandleItem = false;
-                tempPosition = -1;
-                targetPosition = -1;
-                break;
-        }
+        mSelectionController.onTouchEvent(ev);
 
         return super.onTouchEvent(ev);
     }
@@ -308,7 +227,7 @@ public class DDGridView extends GridView implements DragOrDroppable, MultiChoosa
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        setChoiceMode(DDGridView.CHOICE_MODE_NONE);
+                        setChoiceMode(DDListView.CHOICE_MODE_NONE);
                     }
                 }, 100);
                 break;
@@ -320,7 +239,6 @@ public class DDGridView extends GridView implements DragOrDroppable, MultiChoosa
                 break;
         }
     }
-
 
     private class MultiChoiceModeWrapper implements MultiChoiceModeListener {
         MultiChoiceModeListener mWrapped;
@@ -347,6 +265,7 @@ public class DDGridView extends GridView implements DragOrDroppable, MultiChoosa
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             mActionMode = mode;
+            mSelectionController.setActionMode(mActionMode);
             setLongClickable(true);
             return mWrapped.onPrepareActionMode(mode, menu);
         }
@@ -370,27 +289,13 @@ public class DDGridView extends GridView implements DragOrDroppable, MultiChoosa
         }
     }
 
-    private class CheckLongClick implements Runnable {
-
-        @Override
-        public void run() {
-            int position = pointToPosition(mLastMotionX, mLastMotionY);
-            long id = getAdapter().getItemId(position);
-            int itemNum = position - getFirstVisiblePosition();
-            View selectedView = getChildAt(itemNum);
-
-            setItemChecked(position, true);
-
-            onItemLongClick(DDGridView.this, selectedView, position, id);
-        }
-    }
-
     public void setOnDragDropListener(OnDragDropListener onDragDropListener) {
         this.onDragDropListener = onDragDropListener;
     }
 
     public void setDragDropAttacher(SelectionAttacher dragDropAttacher) {
         this.mDragDropAttacher = dragDropAttacher;
+        mSelectionController.setSelectionAttacher(this.mDragDropAttacher);
         mDragDropAttacher.setMultiChoosable(this);
     }
 
@@ -406,5 +311,6 @@ public class DDGridView extends GridView implements DragOrDroppable, MultiChoosa
 
     public void setIsSwipeChoise(boolean isSwipeChoise) {
         this.isSwipeChoise = isSwipeChoise;
+        mSelectionController.setIsSwipeChoise(this.isSwipeChoise);
     }
 }

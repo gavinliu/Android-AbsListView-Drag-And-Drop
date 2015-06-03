@@ -13,8 +13,6 @@ class SelectionController {
 
     private AbsListView absListView;
 
-    private MultiChoosable multiChoosable;
-
     private int mLastMotionX, mLastMotionY;
 
     private boolean isHandleItem;
@@ -27,9 +25,27 @@ class SelectionController {
 
     private boolean isSwipeChoise;
 
-    private SelectionAttacher mDragDropAttacher;
+    private SelectionAttacher selectionAttacher;
 
     private static final int TOUCH_SLOP = 10;
+
+
+    public void setSelectionAttacher(SelectionAttacher selectionAttacher) {
+        this.selectionAttacher = selectionAttacher;
+    }
+
+    public void setActionMode(ActionMode actionMode) {
+        this.mActionMode = actionMode;
+    }
+
+    public void setIsSwipeChoise(boolean isSwipeChoise) {
+        this.isSwipeChoise = isSwipeChoise;
+    }
+
+
+    public SelectionController(AbsListView absListView) {
+        this.absListView = absListView;
+    }
 
     void startSelection(int position) {
         isHandleItem = true;
@@ -48,7 +64,7 @@ class SelectionController {
                 mLastMotionX = x;
                 mLastMotionY = y;
 
-                if (mActionMode != null) {
+                if (mActionMode != null && !isSwipeChoise) {
                     if (mCheckLongClick == null) {
                         mCheckLongClick = new CheckLongClick();
                     }
@@ -91,8 +107,8 @@ class SelectionController {
 
                         for (; i <= j; i++) {
                             absListView.setItemChecked(i, true);
-                            if (mDragDropAttacher != null) {
-                                mDragDropAttacher.updateChooseCount(absListView.getCheckedItemCount());
+                            if (selectionAttacher != null) {
+                                selectionAttacher.updateChooseCount(absListView.getCheckedItemCount());
                             }
                         }
 
@@ -136,5 +152,7 @@ class SelectionController {
 
         }
     }
+
+
 
 }

@@ -9,10 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:horizontalSpacing="10dp"
+        android:horizontalSpacing="5dp"
         android:numColumns="3"
-        android:padding="10dp"
         android:scrollbarStyle="outsideOverlay"
-        android:verticalSpacing="10dp" />
+        android:verticalSpacing="5dp" />
 
 </LinearLayout>
