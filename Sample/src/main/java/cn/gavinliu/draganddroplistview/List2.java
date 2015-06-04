@@ -18,7 +18,8 @@ public class List2 extends BaseListActivity {
 
         listView.setSelectionMode(SelectionMode.Custom);
         listView.setOnDragDropListener(onDragDropListener);
-        listView.setDragDropAttacher(new SelectionAttacher(new DefaultHeaderTransformer(this), new DefaultFooterTransformer(this)));
+
+        listView.setDragDropAttacher(new SelectionAttacher(new DefaultHeaderTransformer(this, 56 * 3), new DefaultFooterTransformer(this, 56 * 3)));
         listView.addMenuZone(findViewById(R.id.btn_delete), MenuZone.Type.DELETE);
     }
 

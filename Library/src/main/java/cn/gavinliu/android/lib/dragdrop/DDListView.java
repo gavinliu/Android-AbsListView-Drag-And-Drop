@@ -266,7 +266,6 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             mActionMode = mode;
             mSelectionController.setActionMode(mActionMode);
-            setLongClickable(true);
             return mWrapped.onPrepareActionMode(mode, menu);
         }
 
@@ -274,6 +273,7 @@ public class DDListView extends ListView implements DragOrDroppable, MultiChoosa
         public void onDestroyActionMode(ActionMode mode) {
             isDraggable = true;
             mActionMode = null;
+            mSelectionController.setActionMode(null);
         }
 
         @Override

@@ -55,8 +55,8 @@ public class MyLayout extends FrameLayout {
     @Override
     public void setActivated(boolean activated) {
         if (activated && !this.activated && isAnimation) {
-            ObjectAnimator animatorWidth = ObjectAnimator.ofFloat(text, "scaleX", 1f, 0.9f);
-            ObjectAnimator animatorHeight = ObjectAnimator.ofFloat(text, "scaleY", 1f, 0.9f);
+            ObjectAnimator animatorWidth = ObjectAnimator.ofFloat(text, "scaleX", 1f, 0.85f);
+            ObjectAnimator animatorHeight = ObjectAnimator.ofFloat(text, "scaleY", 1f, 0.85f);
 
             AnimatorSet animatorSet = new AnimatorSet();
             animatorSet.setDuration(250);

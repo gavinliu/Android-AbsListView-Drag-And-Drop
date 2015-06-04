@@ -25,12 +25,12 @@ public class DefaultHeaderTransformer extends HeaderTransformer implements View.
 
     private boolean isAll = false;
 
-    public DefaultHeaderTransformer(Activity activity) {
+    public DefaultHeaderTransformer(Activity activity, int actionbarHeight) {
         ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
         mHeaderView = LayoutInflater.from(activity.getApplicationContext()).inflate(R.layout.header, null);
 
         int statusHeight = getInternalDimensionSize(activity.getResources(), "status_bar_height");
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 56 * 3 + statusHeight);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, actionbarHeight + statusHeight);
         params.gravity = Gravity.TOP;
         mHeaderView.setLayoutParams(params);
         mHeaderView.setPadding(0, statusHeight, 0, 0);

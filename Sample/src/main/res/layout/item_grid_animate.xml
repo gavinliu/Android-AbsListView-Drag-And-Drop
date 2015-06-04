@@ -18,7 +18,7 @@
     <View
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_margin="5dp"
+        android:layout_margin="3dp"
         android:background="@drawable/list_item_checkbox_bg"
         android:clickable="false"
         android:focusable="false" />
