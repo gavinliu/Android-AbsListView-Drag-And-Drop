@@ -2,9 +2,22 @@
 
 A complex ListView & GridView with Drag and Drop functionality.
 
-* Drag a item to drop menu view, call back drop function.
+* Drag item to drop menu view, call back drop function.
 
-* Swipe choose item
+* Swipe choose
+
+## How to look?
+
+1. Drag drop & MultiChoice(Official & Custom)
+
+![Official](dd1.gif)
+
+![Custom](dd2.gif)
+
+2. Swipe Choose, like Google Photos
+
+![Swipe](dd3.gif)
+
 
 ## Usage
 
@@ -24,12 +37,12 @@ listView.setMultiChoiceModeListener(multiChoiceModeListener);
 
 2. SelectionMode.Custom
 
-It is a custom multi choose mode, you should use ``DragDropAttacher``.
+It is a custom multi choose mode, you should use ``SelectionAttacher``.
 
 ```java
 listView.setSelectionMode(SelectionMode.Custom);
 
-listView.setDragDropAttacher(new DragDropAttacher(new DefaultHeaderTransformer(this), new DefaultFooterTransformer(this)));
+listView.setDragDropAttacher(new SelectionAttacher(new DefaultHeaderTransformer(this), new DefaultFooterTransformer(this)));
 ```
 
 #### Swipe choose
