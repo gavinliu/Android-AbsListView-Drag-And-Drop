@@ -1,5 +1,10 @@
 package cn.gavinliu.draganddroplistview;
 
+import android.app.Activity;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Toast;
+
 import cn.gavinliu.android.lib.dragdrop.SelectionAttacher;
 import cn.gavinliu.android.lib.dragdrop.SelectionMode;
 import cn.gavinliu.android.lib.dragdrop.listener.OnDragDropListener;
@@ -19,8 +24,16 @@ public class List2 extends BaseListActivity {
         listView.setSelectionMode(SelectionMode.Custom);
         listView.setOnDragDropListener(onDragDropListener);
 
-        listView.setDragDropAttacher(new SelectionAttacher(new DefaultHeaderTransformer(this, 56 * 3), new DefaultFooterTransformer(this, 56 * 3)));
+        listView.setDragDropAttacher(new SelectionAttacher(new DefaultHeaderTransformer(this, 56 * 3), new MyDefaultFooterTransformer(this, 56 * 3)));
         listView.addMenuZone(findViewById(R.id.btn_delete), MenuZone.Type.DELETE);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getApplicationContext(), position + " onItemClick Click", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     private OnDragDropListener onDragDropListener = new OnDragDropListener() {
@@ -54,4 +67,19 @@ public class List2 extends BaseListActivity {
         }
     };
 
+    public class MyDefaultFooterTransformer extends DefaultFooterTransformer {
+
+        public MyDefaultFooterTransformer(Activity activity, int height) {
+            super(activity, height);
+
+            activity.findViewById(R.id.btn_delete).setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(), "Delete Click", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+    }
 }
